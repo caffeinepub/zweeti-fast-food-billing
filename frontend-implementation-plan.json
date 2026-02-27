@@ -1,60 +1,28 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update visual theme and add Download Bill button (ZWEETI Pro reference design)",
+  "title": "Replace Download Bill with html2pdf.js PDF generation",
   "requirements": [
     {
-      "id": "REQ-6",
-      "summary": "Update visual theme across App.tsx, BillingForm.tsx, and BillSummary.tsx to match ZWEETI Pro reference design with grey background, white card container, orange accents, and dashed borders",
+      "id": "REQ-8",
+      "summary": "Replace plain-text download with PDF generation using html2pdf.js library, capturing bill content and downloading as zweeti-bill.pdf",
       "acceptanceCriteria": [
-        "Page background is grey (#f2f2f2)",
-        "Card container is white, 420px wide, with rounded corners and a subtle box-shadow",
-        "Headings and table header backgrounds use orange #ff5722",
-        "Table row borders are dashed (#ccc)",
-        "Layout is centered and mobile-friendly"
+        "Clicking 'Download Bill' generates and downloads a PDF file named 'zweeti-bill.pdf'.",
+        "The downloaded PDF contains the customer name, all bill items with price and quantity, subtotal, GST (5%), and grand total.",
+        "html2pdf.js is used for PDF generation.",
+        "The 'Download Bill' button is not visible when the browser print dialog is triggered.",
+        "No plain-text .txt file is downloaded; only the PDF output is produced."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/package.json",
           "operation": "modify",
-          "description": "Add ZWEETI Pro theme variables and override page background to grey (#f2f2f2). Include custom CSS for orange accent color (#ff5722), dashed borders, and card container styles (white background, 420px width, rounded corners, box-shadow). Ensure print styles remain intact."
+          "description": "Add html2pdf.js as a dependency to enable PDF generation functionality. Install the npm package 'html2pdf.js' compatible with the existing React/Vite build setup."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the root component layout to apply centered positioning and wrap the billing UI in a white card container with 420px max-width, rounded corners, and box-shadow. Apply orange (#ff5722) styling to the header/title. Ensure the layout is responsive and mobile-friendly."
-        },
-        {
-          "path": "frontend/src/components/BillingForm.tsx",
-          "operation": "modify",
-          "description": "Apply ZWEETI Pro theme styling: use orange (#ff5722) for section headings and form labels. Ensure the form integrates with the card container layout and maintains the existing 13-item menu and functionality."
-        },
-        {
-          "path": "frontend/src/components/BillSummary.tsx",
-          "operation": "modify",
-          "description": "Update table styling to use orange (#ff5722) for the header background and text, apply dashed borders (1px dashed #ccc) to table rows, and ensure totals section styling matches the ZWEETI Pro design. Preserve the existing remove button and totals calculation logic."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Add a Download Bill button styled in blue (#2196f3) that generates and downloads a plain-text bill file (zweeti-bill.txt) and is hidden during print",
-      "acceptanceCriteria": [
-        "A 'Download Bill' button is visible next to the Print Bill button",
-        "The button is styled with blue (#2196f3) background and white text",
-        "Clicking the button triggers a file download named 'zweeti-bill.txt' containing the full bill details",
-        "The Download Bill button is hidden when the browser's print dialog is triggered"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add a Download Bill button in the actions area alongside the existing Print Bill button. Style it with blue background (#2196f3) and white text. Implement a click handler that generates a plain-text representation of the current bill (customer name, items with quantities and prices, subtotal, GST 5%, grand total) and triggers a browser download as 'zweeti-bill.txt'."
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add print media query rule to hide the Download Bill button (using a specific class or data attribute) when the print dialog is triggered, ensuring it does not appear on printed bills."
+          "description": "Replace the current handleDownload function that creates a plain-text file with new PDF generation logic using html2pdf.js. Import the html2pdf library at the top of the file. Update the handleDownload function to: (1) select the bill content area containing customer name, items table, subtotal, GST, and grand total using a ref or querySelector, (2) configure html2pdf with appropriate options (filename: 'zweeti-bill.pdf', margins, format), (3) call html2pdf to capture the content and trigger download. Ensure the 'Download Bill' button retains the existing hidden-on-print class so it remains hidden during print. Remove any code that generates or downloads .txt files."
         }
       ]
     }

@@ -1,6 +1,6 @@
 {
   "frontend/index.html": "HTML entry point with Nunito font loaded from Google Fonts for the Zweeti Fast Food Billing app.",
-  "frontend/src/App.tsx": "Main app component managing customer name and bill items state, rendering the ZWEETI Pro themed billing UI with header, form, summary, Print Bill button, Download Bill button (blue, downloads zweeti-bill.txt, hidden on print), Clear All button, and footer.",
+  "frontend/src/App.tsx": "Main app component managing customer name and bill items state, rendering the ZWEETI Pro themed billing UI with header, form, summary, Print Bill button, Download Bill button (blue, generates zweeti-bill.pdf via dynamically loaded html2pdf.js CDN, hidden on print with inline spinner during generation), Clear All button, and footer.",
   "frontend/src/components/BillingForm.tsx": "Billing form with Zweeti's 13-item menu, styled with ZWEETI Pro orange accents, dashed borders, rounded-[5px] corners, and orange Add Item button matching the reference design.",
   "frontend/src/components/BillSummary.tsx": "Bill summary table with orange (#ff5722) header background, dashed row borders (#ccc), orange grand total text, and preserved remove button and GST (5%) calculation logic.",
   "frontend/src/index.css": "Global styles with ZWEETI Pro theme — grey (#f2f2f2) page background, white card containers with box-shadow, orange (#ff5722) accents, blue (#2196f3) and green (#4caf50) button classes, dashed borders, and print media rules hiding no-print elements.",

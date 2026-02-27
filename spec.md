@@ -1,14 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Update the visual theme of the Zweeti Pro Billing app to match a reference design and add a "Download Bill" button.
+**Goal:** Replace the plain-text "Download Bill" functionality with PDF generation using html2pdf.js.
 
 **Planned changes:**
-- Set page background to grey (`#f2f2f2`) and center content in a white card (420px wide, rounded corners, box-shadow)
-- Apply orange accent (`#ff5722`) to headings, table header backgrounds, and primary buttons
-- Use dashed borders (`1px dashed #ccc`) for table rows
-- Add a "Download Bill" button styled in blue (`#2196f3`) with white text, placed next to the existing "Print Bill" button
-- Clicking "Download Bill" generates and downloads a file named `zweeti-bill.txt` containing customer name, items, subtotal, GST, and grand total
-- Hide the "Download Bill" button during print
+- Install or import html2pdf.js (via npm package or CDN compatible with React/Vite).
+- Replace the existing plain-text `.txt` download logic in the "Download Bill" button handler in `App.tsx` with html2pdf.js-based PDF generation.
+- Capture the bill content area (customer name, items table, subtotal, GST, grand total) and download it as `zweeti-bill.pdf`.
+- Ensure the "Download Bill" button remains hidden during browser print.
 
-**User-visible outcome:** The billing app displays a polished orange-and-white themed layout, and users can download the current bill as a text file in addition to printing it.
+**User-visible outcome:** Clicking "Download Bill" now downloads a properly formatted PDF file (`zweeti-bill.pdf`) containing the full bill details instead of a plain-text file.

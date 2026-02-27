@@ -1,43 +1,25 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T04:01:45.004Z",
+  "generatedAt": "2026-02-27T04:12:40.795Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-6",
-        "summary": "Update the visual theme across App.tsx, BillingForm.tsx, and BillSummary.tsx to match the ZWEETI Pro reference design: use grey background (#f2f2f2) for the page, white card container (420px wide, rounded corners, box-shadow), orange accent #ff5722 for headings, table header backgrounds, and primary buttons, dashed borders for table rows, and a centered layout.",
+        "id": "REQ-8",
+        "summary": "Replace the current plain-text file download logic in the 'Download Bill' button (App.tsx) with PDF generation using the html2pdf.js library. When clicked, the button should capture the bill content area (customer name, items table, subtotal, GST, grand total) and download it as a PDF file named 'zweeti-bill.pdf'. The button must remain hidden during print. Load html2pdf.js via npm package or CDN import compatible with the existing React/Vite build setup.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/App.tsx",
-          "frontend/src/components/BillingForm.tsx",
-          "frontend/src/components/BillSummary.tsx"
+          "frontend/package.json",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/App.tsx",
-          "frontend/src/components/BillingForm.tsx",
-          "frontend/src/components/BillSummary.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Add a 'Download Bill' button styled in blue (#2196f3) with white text, placed alongside the existing Print Bill button in the actions area of App.tsx. Clicking it should generate and download a plain-text or HTML representation of the current bill (customer name, items, subtotal, GST, grand total) as a file named 'zweeti-bill.txt'. The Download Bill button must also be hidden during print.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/index.css"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/index.css"
+          "frontend/src/App.tsx"
         ]
       }
     ]
@@ -48,10 +30,6 @@
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/components/BillSummary.tsx",
-    "frontend/src/components/BillingForm.tsx",
-    "frontend/src/index.css",
-    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

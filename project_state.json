@@ -1,13 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided a new reference HTML design ('ZWEETI Pro Billing') with updated styling: orange #ff5722 accent, white card on grey background, dashed table borders, a Print Bill button (green #4caf50), and a Download Bill button (blue #2196f3).",
+  "projectStateVersion": 9,
+  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated reference HTML design ('ZWEETI Pro Billing') that uses html2pdf.js for PDF generation. Key styling: orange #ff5722 accent, white card on grey background, dashed table borders, 420px card width, Print Bill button (green #4caf50), and a Download Bill button using html2pdf.js library.",
   "architectural_notes": [
     "Single-page HTML app with inline CSS and vanilla JS",
     "GST fixed at 5% on subtotal",
     "Print bill hides buttons via @media print",
     "Menu items updated per user reference: 13 items including Chaumin variants, Momos, Pasta, Rolls, and Burgers",
-    "New reference design uses grey body background (#f2f2f2), orange #ff5722 accent, dashed table borders, and a download button alongside print"
+    "New reference design uses grey body background (#f2f2f2), orange #ff5722 accent, dashed table borders, and a download button alongside print",
+    "Download Bill uses html2pdf.js (CDN: html2pdf.bundle.min.js v0.10.1) to generate a PDF from the bill content"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -67,6 +68,14 @@
         "REQ-7"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-plain-text-file-download-logic-in-the-download-bill-button-app-tsx-with-pdf-generation-using-the-html2pdf-js-library-when-clicked-the-button-should-capture-the-bill-content-area-customer-name-items-table-subtotal-gst-grand-total-and-download-it-as-a-pdf-file-named-zweeti-bill-pdf-the-button-must-remain-hidden-during-print-load-html2pdf-js-via-npm-package-or-cdn-import-compatible-with-the-existing-react-vite-build-setup",
+      "title": "Replace the current plain-text file download logic in the 'Download Bill' button (App.tsx) with PDF generation using the html2pdf.js library. When clicked, the button should capture the bill content area (customer name, items table, subtotal, GST, grand total) and download it as a PDF file named 'zweeti-bill.pdf'. The button must remain hidden during print. Load html2pdf.js via npm package or CDN import compatible with the existing React/Vite build setup.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -85,6 +94,12 @@
     {
       "id": "AR-3",
       "summary": "Update visual theme to match new reference: grey background (#f2f2f2), orange accent #ff5722, dashed table borders, 420px card width",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Use html2pdf.js library for the Download Bill button to generate and download a PDF of the bill",
       "reqIds": [],
       "status": "pending"
     }
