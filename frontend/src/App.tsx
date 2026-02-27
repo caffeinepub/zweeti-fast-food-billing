@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import BillingForm from './components/BillingForm';
 import BillSummary from './components/BillSummary';
 import { Printer, Download, UtensilsCrossed, Heart } from 'lucide-react';
@@ -26,12 +26,35 @@ function loadHtml2Pdf(): Promise<unknown> {
   });
 }
 
+function generateInvoiceNumber(): string {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const rand = String(Math.floor(1000 + Math.random() * 9000));
+  return `ZWT-${yyyy}${mm}${dd}-${rand}`;
+}
+
+function formatDate(date: Date): string {
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
 export default function App() {
   const [customerName, setCustomerName] = useState('');
   const [billItems, setBillItems] = useState<BillItem[]>([]);
   const [nextId, setNextId] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [billDate, setBillDate] = useState('');
   const billRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setInvoiceNumber(generateInvoiceNumber());
+    setBillDate(formatDate(new Date()));
+  }, []);
 
   const handleAddItem = (name: string, price: number, qty: number) => {
     const total = price * qty;
@@ -50,6 +73,8 @@ export default function App() {
     setBillItems([]);
     setCustomerName('');
     setNextId(1);
+    setInvoiceNumber(generateInvoiceNumber());
+    setBillDate(formatDate(new Date()));
   };
 
   const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
@@ -89,6 +114,24 @@ export default function App() {
       `;
       container.appendChild(header);
 
+      // Invoice No & Date
+      const invoiceInfoDiv = document.createElement('div');
+      invoiceInfoDiv.style.cssText = `
+        background: #fff8f6;
+        padding: 10px 16px;
+        font-size: 13px;
+        color: #555;
+        border-left: 3px solid #ff5722;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+      `;
+      invoiceInfoDiv.innerHTML = `
+        <span><strong>Invoice No:</strong> ${invoiceNumber}</span>
+        <span><strong>Date:</strong> ${billDate}</span>
+      `;
+      container.appendChild(invoiceInfoDiv);
+
       // Customer name
       if (customerName) {
         const custDiv = document.createElement('div');
@@ -102,6 +145,8 @@ export default function App() {
         `;
         custDiv.innerHTML = `<strong>Customer:</strong> ${customerName}`;
         container.appendChild(custDiv);
+      } else {
+        invoiceInfoDiv.style.marginBottom = '12px';
       }
 
       // Items table
@@ -239,6 +284,20 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 py-6 px-4">
         <div className="zweeti-bill-box space-y-4">
+
+          {/* Invoice Info */}
+          <div className="zweeti-card invoice-info">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-gray-600">
+              <p>
+                <span className="font-bold text-gray-700">Invoice No:</span>{' '}
+                <span className="font-mono text-[#ff5722] font-semibold">{invoiceNumber}</span>
+              </p>
+              <p>
+                <span className="font-bold text-gray-700">Date:</span>{' '}
+                <span className="font-medium">{billDate}</span>
+              </p>
+            </div>
+          </div>
 
           {/* Customer Name */}
           <div className="zweeti-card">
