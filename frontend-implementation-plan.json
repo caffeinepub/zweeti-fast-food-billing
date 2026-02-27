@@ -1,23 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add localhost/127.0.0.1 to Firebase authorized domains",
+  "title": "Update Firebase authDomain to use yourdomain.com",
   "requirements": [
     {
-      "id": "REQ-50",
-      "summary": "Configure Firebase stub to accept localhost and 127.0.0.1 as authorized domains for OTP authentication testing",
+      "id": "REQ-51",
+      "summary": "Update authDomain in firebaseConfig to 'yourdomain.com' while preserving all other configuration values and exports",
       "acceptanceCriteria": [
-        "The app loads and the Firebase OTP login screen is displayed when served from http://localhost or http://127.0.0.1 without console errors related to unauthorized domains.",
-        "The Send OTP button on the login screen does not throw a Firebase 'auth/unauthorized-domain' error when accessed via localhost or 127.0.0.1.",
-        "The existing auto-login (zweetiUser in localStorage) still works correctly when the app is served from localhost or 127.0.0.1.",
-        "The real Firebase credentials already stored in firebase.ts remain unchanged.",
-        "All existing exports from firebase.ts (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and compatible with their usage in App.tsx."
+        "The authDomain field in firebaseConfig in frontend/src/firebase.ts is set to 'yourdomain.com'.",
+        "All other firebaseConfig values remain unchanged.",
+        "All existing exports (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and functional.",
+        "The app builds without errors after the change."
       ],
       "file_operations": [
         {
           "path": "frontend/src/firebase.ts",
           "operation": "modify",
-          "description": "Update the Firebase stub implementation to ensure the mock RecaptchaVerifier and signInWithPhoneNumber accept localhost and 127.0.0.1 origins without throwing unauthorized domain errors. Add permissive domain checking logic in the mock implementation that allows these local domains while preserving all existing exports (auth, RecaptchaVerifier, signInWithPhoneNumber) and maintaining compatibility with App.tsx usage. Ensure firebaseConfig (if present) retains real project credentials unchanged."
+          "description": "Update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Preserve all other firebaseConfig fields (apiKey, projectId, storageBucket, messagingSenderId, appId, measurementId) and all existing exports (auth instance, RecaptchaVerifier, signInWithPhoneNumber) without modification."
         }
       ]
     }

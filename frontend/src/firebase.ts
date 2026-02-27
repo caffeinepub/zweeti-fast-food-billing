@@ -7,10 +7,22 @@
 // Authorized domains (no Firebase 'auth/unauthorized-domain' errors):
 //   - localhost
 //   - 127.0.0.1
+//   - yourdomain.com
 //   - any other origin (stub accepts all domains)
 //
 // To activate real Firebase Auth, install the firebase package and replace the
 // stubs with the real SDK calls.
+
+// ── Firebase configuration ────────────────────────────────────────────────
+export const firebaseConfig = {
+  apiKey: '',
+  authDomain: 'yourdomain.com',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+  measurementId: '',
+};
 
 // ── Type definitions that mirror firebase/auth ────────────────────────────
 
@@ -31,12 +43,12 @@ export const auth = {
 export type AuthInstance = typeof auth;
 
 // Domains that are always permitted (no unauthorized-domain error thrown)
-const ALLOWED_DOMAINS = ['localhost', '127.0.0.1'];
+const ALLOWED_DOMAINS = ['localhost', '127.0.0.1', 'yourdomain.com'];
 
 function isAllowedDomain(): boolean {
   if (typeof window === 'undefined') return true;
   const hostname = window.location.hostname;
-  // Allow localhost, 127.0.0.1, and any other origin (stub is permissive)
+  // Allow localhost, 127.0.0.1, yourdomain.com, and any other origin (stub is permissive)
   return ALLOWED_DOMAINS.includes(hostname) || hostname.length > 0;
 }
 
@@ -96,12 +108,12 @@ export async function signInWithPhoneNumber(
   phoneNumber: string,
   _verifier: RecaptchaVerifier
 ): Promise<ConfirmationResult> {
-  // Domain check: localhost and 127.0.0.1 are explicitly allowed
+  // Domain check: localhost, 127.0.0.1, and yourdomain.com are explicitly allowed
   if (!isAllowedDomain()) {
     throw new Error('auth/unauthorized-domain: This domain is not authorized.');
   }
 
-  // Stub: simulate OTP send — works on localhost, 127.0.0.1, and all origins
+  // Stub: simulate OTP send — works on localhost, 127.0.0.1, yourdomain.com, and all origins
   console.info(`[Firebase stub] OTP requested for ${phoneNumber} from ${typeof window !== 'undefined' ? window.location.hostname : 'unknown'}`);
   // Simulate network delay
   await new Promise(res => setTimeout(res, 800));

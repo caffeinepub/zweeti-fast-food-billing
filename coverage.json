@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T08:49:56.674Z",
+  "generatedAt": "2026-02-27T08:53:41.208Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,8 +11,8 @@
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-50",
-        "summary": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
+        "id": "REQ-51",
+        "summary": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/firebase.ts"

@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-frontend-src-firebase-ts-update-the-firebase-app-configuration-to-add-localhost-and-127-0-0-1-as-authorized-domains-for-firebase-authentication-ensure-the-authdomain-field-in-the-firebaseconfig-object-continues-to-use-the-existing-real-project-credentials-and-that-the-recaptchaverifier-initialization-in-app-tsx-does-not-block-or-error-when-the-app-is-served-from-localhost-or-127-0-0-1-if-the-firebase-stub-mock-implementation-is-being-used-instead-of-the-real-firebase-npm-package-ensure-the-mock-recaptchaverifier-and-signinwithphonenumber-behave-permissively-when-called-from-localhost-so-that-otp-flow-can-be-tested-locally-without-firebase-rejecting-the-domain",
-      "featureTitle": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
+      "featureId": "feature-in-frontend-src-firebase-ts-update-the-authdomain-field-in-the-firebaseconfig-object-to-yourdomain-com-keep-all-other-existing-firebaseconfig-values-apikey-projectid-appid-etc-and-all-existing-exports-auth-instance-via-getauth-recaptchaverifier-signinwithphonenumber-unchanged",
+      "featureTitle": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
       "files": [
         "frontend/src/firebase.ts"
       ],
@@ -15,7 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-50"
+        "REQ-51"
       ],
       "confidence": "high"
     }

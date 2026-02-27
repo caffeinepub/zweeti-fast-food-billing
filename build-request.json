@@ -1,42 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Add localhost/127.0.0.1 to Firebase authorized domains",
+  "title": "Update Firebase authDomain to use yourdomain.com",
   "projectName": "Zweeti Pro",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-50",
-      "text": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
+      "id": "REQ-51",
+      "text": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-1"
         ],
         "quotes": [
-          "localhost",
-          "127.0.0.1"
+          "yourdomain.com"
         ]
       },
       "acceptanceCriteria": [
-        "The app loads and the Firebase OTP login screen is displayed when served from http://localhost or http://127.0.0.1 without console errors related to unauthorized domains.",
-        "The Send OTP button on the login screen does not throw a Firebase 'auth/unauthorized-domain' error when accessed via localhost or 127.0.0.1.",
-        "The existing auto-login (zweetiUser in localStorage) still works correctly when the app is served from localhost or 127.0.0.1.",
-        "The real Firebase credentials already stored in firebase.ts remain unchanged.",
-        "All existing exports from firebase.ts (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and compatible with their usage in App.tsx."
+        "The authDomain field in firebaseConfig in frontend/src/firebase.ts is set to 'yourdomain.com'.",
+        "All other firebaseConfig values remain unchanged.",
+        "All existing exports (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and functional.",
+        "The app builds without errors after the change."
       ]
     }
   ],
   "constraints": [
-    "Do not change or remove the real Firebase credentials already stored in frontend/src/firebase.ts.",
-    "Do not modify any files under frontend/src/hooks/ or frontend/src/main.tsx.",
-    "Do not break the existing localStorage-based auto-login (zweetiUser) flow.",
-    "Do not alter the existing billing, GST toggle, daily sales report, or date-wise sales report functionality."
+    "Do not modify any other firebaseConfig fields (apiKey, projectId, appId, etc.).",
+    "Do not alter the exported auth instance, RecaptchaVerifier, or signInWithPhoneNumber signatures.",
+    "Do not modify any immutable frontend paths."
   ],
   "nonGoals": [
-    "Changing the Firebase project or creating a new Firebase app instance.",
-    "Adding new billing features or modifying the billing UI.",
-    "Modifying backend/main.mo.",
-    "Changing the visual theme or layout of the app."
+    "Changing any other Firebase configuration or authentication logic.",
+    "Modifying App.tsx or any other component files.",
+    "Adding new features or UI changes."
   ],
   "imageRequirements": {
     "required": [],
