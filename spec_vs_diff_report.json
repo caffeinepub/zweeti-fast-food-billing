@@ -1,14 +1,21 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T05:54:39.613Z",
-  "summary": "The diff implements REQ-9 fully: an auto-generated Invoice Number in ZWT-YYYYMMDD-XXXX format and a formatted date (DD/MM/YYYY) are added to App.tsx, displayed as read-only fields above the customer name section, regenerated on 'Clear All', and included in both print output and the html2pdf.js PDF generation. All acceptance criteria appear to be met.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-27T07:55:43.682Z",
+  "summary": "The diff only modifies project_state.json (a metadata/state tracking file) and does not show any changes to App.tsx or any other source code file. REQ-36 requires changes to App.tsx to implement React state-based login/billing screen visibility toggling, but no such implementation is evident in the diff.",
+  "missing_requirements": [
+    {
+      "id": "REQ-36",
+      "requirement": "In App.tsx, ensure that after the user successfully completes login (enters a valid 10-digit mobile number and clicks 'Continue'), the main billing UI is made visible using React state. The billing screen must be hidden before login and fully visible after successful login validation.",
+      "reason": "The diff only modifies project_state.json (a metadata file). No changes to App.tsx or any React component are present in the diff. The required React state-based login gate logic controlling billing screen visibility has not been implemented.",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
   "hallucinated_features": [],
   "confidence": 0.92,
   "changed_files": [
-    "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
     "project_state.json"
   ]
 }

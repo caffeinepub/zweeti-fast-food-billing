@@ -1,14 +1,15 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
-  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated reference HTML design ('ZWEETI Pro Billing') that uses html2pdf.js for PDF generation. Key styling: orange #ff5722 accent, white card on grey background, dashed table borders, 420px card width, Print Bill button (green #4caf50), and a Download Bill button using html2pdf.js library. User has also requested adding Invoice Number and Date fields to the bill.",
+  "projectStateVersion": 45,
+  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated CSS reference design with: gradient body background (linear-gradient 135deg #ff5722 to #ff9800), app container max-width 420px with #f5f5f5 background, orange #ff5722 header bar, white cards with border-radius 12px and box-shadow, table headers with #ffe0d6 background, buttons full-width with border-radius 8px (Print: #4caf50, PDF: #2196f3, Clear: #9e9e9e). User has also requested Invoice Number and Date fields. Save as PDF button calls window.print(). GST toggle checkbox (checked by default) toggles GST (5%) on/off. A login screen (ZWEETI Pro Login) has been requested with a mobile number input and a Continue button.",
   "architectural_notes": [
     "Single-page HTML app with inline CSS and vanilla JS",
-    "GST fixed at 5% on subtotal",
     "Print bill hides buttons via @media print",
     "Menu items updated per user reference: 13 items including Chaumin variants, Momos, Pasta, Rolls, and Burgers",
-    "New reference design uses grey body background (#f2f2f2), orange #ff5722 accent, dashed table borders, and a download button alongside print",
-    "Download Bill uses html2pdf.js (CDN: html2pdf.bundle.min.js v0.10.1) to generate a PDF from the bill content"
+    "Save as PDF button uses window.print() (printBill function), replacing the open-in-new-tab PDF approach",
+    "Date Wise Sales Report uses localStorage key format 'dailyTotal_YYYY-M-D' (non-zero-padded month/day) via getKeyFromDate()",
+    "GST is togglable via a checkbox (id='gstToggle'); when unchecked, GST is 0 and Grand Total equals Subtotal",
+    "Body uses gradient background (135deg #ff5722 to #ff9800); app container is max-width 420px with #f5f5f5 background; header bar is #ff5722; cards are white with border-radius 12px and box-shadow"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -84,6 +85,198 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-invoice-number-and-date-display-block-to-use-the-exact-html-structure-a-p-element-containing-b-invoice-no-b-followed-by-a-span-id-invoiceno-for-the-invoice-number-value-a-br-then-b-date-b-followed-by-a-span-id-billdate-for-the-date-value-the-invoiceno-and-billdate-spans-must-be-populated-with-the-existing-auto-generated-invoice-number-zwt-yyyymmdd-xxxx-format-and-the-current-date-dd-mm-yyyy-format-respectively",
+      "title": "In App.tsx, update the Invoice Number and Date display block to use the exact HTML structure: a <p> element containing <b>Invoice No:</b> followed by a <span id=\"invoiceNo\"> for the invoice number value, a <br>, then <b>Date:</b> followed by a <span id=\"billDate\"> for the date value. The invoiceNo and billDate spans must be populated with the existing auto-generated invoice number (ZWT-YYYYMMDD-XXXX format) and the current date (DD/MM/YYYY format) respectively.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-replace-or-align-the-existing-invoice-number-and-date-generation-logic-with-the-exact-algorithm-from-the-provided-reference-script-the-invoice-number-must-be-generated-using-the-format-zwt-yyyymmdd-xxxx-where-xxxx-is-math-floor-1000-math-random-9000-and-the-date-must-be-formatted-as-dd-mm-yyyy-zero-padded-day-and-month-full-4-digit-year-both-values-must-be-set-into-the-existing-span-id-invoiceno-and-span-id-billdate-elements-respectively-mirroring-the-window-onload-behavior-of-the-reference-script-but-implemented-as-react-state-initialized-on-component-mount",
+      "title": "In App.tsx, replace or align the existing invoice number and date generation logic with the exact algorithm from the provided reference script: the invoice number must be generated using the format ZWT-YYYYMMDD-XXXX (where XXXX is Math.floor(1000 + Math.random() * 9000)), and the date must be formatted as DD-MM-YYYY (zero-padded day and month, full 4-digit year). Both values must be set into the existing <span id=\"invoiceNo\"> and <span id=\"billDate\"> elements respectively, mirroring the window.onload behavior of the reference script but implemented as React state initialized on component mount.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-replace-the-existing-html2pdf-js-based-download-bill-button-logic-with-a-simple-open-in-new-tab-approach-clicking-the-button-must-call-window-open-window-location-href-blank-to-open-the-current-bill-page-in-a-new-browser-tab-the-button-label-should-be-download-pdf-the-button-must-remain-hidden-during-print-using-the-existing-no-print-css-class-remove-any-html2pdf-js-import-and-related-pdf-generation-code",
+      "title": "In App.tsx, replace the existing html2pdf.js-based 'Download Bill' button logic with a simple open-in-new-tab approach: clicking the button must call window.open(window.location.href, '_blank') to open the current bill page in a new browser tab. The button label should be '⬇️ Download PDF'. The button must remain hidden during print (using the existing no-print CSS class). Remove any html2pdf.js import and related PDF generation code.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-replace-the-existing-download-pdf-button-which-calls-window-open-with-a-save-as-pdf-button-clicking-it-must-call-window-print-to-trigger-the-browser-s-native-print-save-as-pdf-dialog-the-button-must-remain-hidden-during-print-using-the-existing-no-print-css-class-remove-the-window-open-logic-entirely",
+      "title": "In App.tsx, replace the existing '⬇️ Download PDF' button (which calls window.open) with a '🖨️ Save as PDF' button. Clicking it must call window.print() to trigger the browser's native print/save-as-PDF dialog. The button must remain hidden during print using the existing no-print CSS class. Remove the window.open logic entirely.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-daily-sales-report-section-to-app-tsx-that-displays-today-s-date-formatted-as-dd-mm-yyyy-today-s-total-sales-revenue-sum-of-all-grand-totals-from-bills-finalized-in-the-current-session-day-labeled-today-s-total-and-a-clear-today-button-labeled-clear-today-that-resets-the-daily-total-to-zero-the-section-heading-must-be-daily-sales-report-the-daily-total-must-increment-each-time-a-bill-is-completed-e-g-when-items-are-present-and-the-bill-is-cleared-reset-via-the-existing-clear-bill-action-the-daily-total-must-persist-across-bill-resets-within-the-same-session-but-reset-to-zero-when-the-clear-today-button-is-clicked",
+      "title": "Add a Daily Sales Report section to App.tsx that displays today's date (formatted as DD-MM-YYYY), today's total sales revenue (sum of all Grand Totals from bills finalized in the current session/day, labeled 'Today's Total: ₹'), and a 'Clear Today' button (labeled '🔄 Clear Today') that resets the daily total to zero. The section heading must be '📊 Daily Sales Report'. The daily total must increment each time a bill is completed (e.g., when items are present and the bill is cleared/reset via the existing Clear Bill action). The daily total must persist across bill resets within the same session but reset to zero when the 'Clear Today' button is clicked.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-date-wise-sales-report-section-to-app-tsx-rendered-below-the-existing-daily-sales-report-section-the-section-must-contain-a-heading-date-wise-sales-report-a-date-picker-input-type-date-a-date-label-with-a-display-span-for-the-selected-date-formatted-as-dd-mm-yyyy-and-a-total-sale-label-with-a-display-span-showing-the-total-sales-for-the-selected-date-when-the-user-selects-a-date-look-up-the-stored-daily-total-for-that-date-from-localstorage-using-the-same-key-schema-used-by-the-daily-sales-report-feature-e-g-zweeti-daily-yyyy-mm-dd-and-display-it-in-the-total-sale-span-if-no-data-exists-for-the-selected-date-display-0-style-the-section-consistently-with-the-existing-daily-sales-report-section-orange-ff5722-heading-white-card-grey-background-the-section-must-be-hidden-during-print",
+      "title": "Add a 'Date Wise Sales Report' section to App.tsx, rendered below the existing Daily Sales Report section. The section must contain: a heading '📅 Date Wise Sales Report', a date picker input (type=\"date\"), a 'Date:' label with a display span for the selected date formatted as DD-MM-YYYY, and a 'Total Sale: ₹' label with a display span showing the total sales for the selected date. When the user selects a date, look up the stored daily total for that date from localStorage (using the same key schema used by the Daily Sales Report feature, e.g. zweeti_daily_<YYYY-MM-DD>) and display it in the Total Sale span. If no data exists for the selected date, display 0. Style the section consistently with the existing Daily Sales Report section (orange #ff5722 heading, white card, grey background). The section must be hidden during print.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-or-the-relevant-stylesheet-apply-the-following-css-styles-to-the-date-wise-sales-report-section-the-container-element-with-class-date-report-must-have-margin-top-20px-padding-15px-background-eef3f7-border-radius-8px-and-text-align-center-the-h3-heading-inside-it-must-have-margin-top-0-the-date-picker-input-inside-it-must-have-padding-6px-and-font-size-15px-these-styles-must-override-or-replace-any-previously-applied-inline-or-tailwind-styles-on-that-section",
+      "title": "In App.tsx (or the relevant stylesheet), apply the following CSS styles to the Date Wise Sales Report section: the container element with class 'date-report' must have margin-top: 20px, padding: 15px, background: #eef3f7, border-radius: 8px, and text-align: center. The h3 heading inside it must have margin-top: 0. The date picker input inside it must have padding: 6px and font-size: 15px. These styles must override or replace any previously applied inline or Tailwind styles on that section.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-date-wise-sales-report-lookup-logic-so-that-the-localstorage-key-used-when-looking-up-a-selected-date-is-derived-using-the-exact-same-algorithm-as-the-reference-script-parse-the-date-input-value-with-new-date-datestr-then-construct-the-key-as-dailytotal-year-month-1-day-without-zero-padding-this-must-match-the-key-format-used-by-the-daily-sales-report-feature-when-storing-daily-totals-e-g-dailytotal-2025-7-4-replace-any-currently-mismatched-key-construction-in-the-date-wise-lookup-so-that-selected-date-lookups-correctly-retrieve-values-stored-by-the-daily-report-feature",
+      "title": "In App.tsx, update the date-wise sales report lookup logic so that the localStorage key used when looking up a selected date is derived using the exact same algorithm as the reference script: parse the date input value with `new Date(dateStr)`, then construct the key as `dailyTotal_` + `year + \"-\" + (month+1) + \"-\" + day` (without zero-padding). This must match the key format used by the Daily Sales Report feature when storing daily totals (e.g. `dailyTotal_2025-7-4`). Replace any currently mismatched key construction in the date-wise lookup so that selected-date lookups correctly retrieve values stored by the daily report feature.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-ensure-that-the-addtodailytotal-grandtotal-function-is-called-with-the-current-bill-s-grand-total-value-at-the-moment-the-bill-is-cleared-reset-i-e-when-the-clear-bill-action-is-triggered-and-items-are-present-this-call-must-happen-before-the-bill-items-are-cleared-so-that-the-grand-total-is-captured-and-added-to-the-daily-sales-total-stored-in-localstorage-under-the-dailytotal-yyyy-m-d-key-format",
+      "title": "In App.tsx, ensure that the `addToDailyTotal(grandTotal)` function is called with the current bill's grand total value at the moment the bill is cleared/reset (i.e., when the Clear Bill action is triggered and items are present). This call must happen before the bill items are cleared so that the grand total is captured and added to the daily sales total stored in localStorage under the `dailyTotal_YYYY-M-D` key format.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-billsummary-tsx-add-a-gst-toggle-checkbox-checked-by-default-labeled-apply-gst-5-above-the-subtotal-gst-grand-total-section-when-the-checkbox-is-unchecked-the-gst-amount-must-display-as-0-and-the-grand-total-must-equal-the-subtotal-when-checked-gst-5-is-applied-as-before-the-checkbox-state-must-be-managed-via-react-state-or-a-prop-callback-pattern-so-the-bill-totals-update-dynamically-whenever-the-checkbox-is-toggled",
+      "title": "In BillSummary.tsx, add a GST toggle checkbox (checked by default) labeled 'Apply GST (5%)' above the Subtotal/GST/Grand Total section. When the checkbox is unchecked, the GST amount must display as ₹0 and the Grand Total must equal the Subtotal. When checked, GST (5%) is applied as before. The checkbox state must be managed via React state (or a prop/callback pattern) so the bill totals update dynamically whenever the checkbox is toggled.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-billsummary-tsx-align-the-gst-toggle-calculation-logic-with-the-reference-script-provided-by-the-user-when-the-apply-gst-5-checkbox-id-gsttoggle-is-checked-compute-gst-as-subtotal-0-05-and-grand-total-as-subtotal-gst-when-unchecked-gst-must-be-exactly-0-and-grand-total-must-equal-the-subtotal-the-displayed-values-for-subtotal-gst-amount-and-grand-total-must-be-formatted-to-two-decimal-places-e-g-using-tofixed-2-equivalent-this-must-mirror-the-exact-calculatebill-logic-from-the-reference-script-triggered-on-checkbox-change-and-on-initial-render",
+      "title": "In BillSummary.tsx, align the GST toggle calculation logic with the reference script provided by the user: when the 'Apply GST (5%)' checkbox (id='gstToggle') is checked, compute GST as subtotal * 0.05 and Grand Total as subtotal + GST; when unchecked, GST must be exactly 0 and Grand Total must equal the subtotal. The displayed values for subtotal, GST amount, and grand total must be formatted to two decimal places (e.g. using toFixed(2) equivalent). This must mirror the exact calculateBill() logic from the reference script, triggered on checkbox change and on initial render.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-the-current-app-tsx-billingform-tsx-billsummary-tsx-and-index-css-against-the-zweeti-pro-html-reference-file-and-reconcile-any-visual-or-structural-discrepancies-specifically-ensure-1-the-page-background-is-f2f2f2-2-the-card-container-is-white-420px-wide-with-rounded-corners-and-box-shadow-3-the-orange-accent-color-ff5722-is-applied-to-all-headings-table-header-backgrounds-and-primary-action-buttons-4-table-rows-use-dashed-borders-5-the-print-bill-button-is-styled-green-4caf50-and-6-the-layout-is-centered-any-inline-styles-or-tailwind-classes-that-conflict-with-these-values-must-be-replaced-to-match-the-reference",
+      "title": "Audit the current App.tsx, BillingForm.tsx, BillSummary.tsx, and index.css against the Zweeti_pro.html reference file and reconcile any visual or structural discrepancies. Specifically ensure: (1) the page background is #f2f2f2, (2) the card container is white, 420px wide, with rounded corners and box-shadow, (3) the orange accent color #ff5722 is applied to all headings, table header backgrounds, and primary action buttons, (4) table rows use dashed borders, (5) the Print Bill button is styled green (#4caf50), and (6) the layout is centered. Any inline styles or Tailwind classes that conflict with these values must be replaced to match the reference.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-the-daily-sales-report-section-in-app-tsx-to-ensure-the-daily-total-correctly-increments-when-a-bill-is-cleared-the-addtodailytotal-grandtotal-call-must-use-the-current-computed-grand-total-respecting-the-gst-toggle-state-from-billsummary-at-the-moment-the-clear-bill-action-is-triggered-before-the-bill-items-array-is-reset-to-empty-the-localstorage-key-must-follow-the-dailytotal-yyyy-m-d-format-non-zero-padded-month-and-day-e-g-dailytotal-2025-7-4",
+      "title": "Verify and fix the Daily Sales Report section in App.tsx to ensure the daily total correctly increments when a bill is cleared. The `addToDailyTotal(grandTotal)` call must use the current computed grand total (respecting the GST toggle state from BillSummary) at the moment the Clear Bill action is triggered, before the bill items array is reset to empty. The localStorage key must follow the `dailyTotal_YYYY-M-D` format (non-zero-padded month and day, e.g. `dailyTotal_2025-7-4`).",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-the-date-wise-sales-report-section-in-app-tsx-so-that-the-localstorage-key-used-for-lookup-when-a-date-is-selected-matches-exactly-the-key-written-by-the-daily-sales-report-feature-the-lookup-key-must-be-constructed-by-parsing-the-date-input-value-with-new-date-datestr-and-building-the-key-as-dailytotal-year-month-1-day-without-zero-padding-on-month-or-day-if-no-data-is-stored-for-the-selected-date-display-0-the-section-container-must-have-class-date-report-with-styles-margin-top-20px-padding-15px-background-eef3f7-border-radius-8px-text-align-center-its-h3-must-have-margin-top-0-its-date-input-must-have-padding-6px-and-font-size-15px-the-section-must-be-hidden-during-print",
+      "title": "Verify and fix the Date Wise Sales Report section in App.tsx so that the localStorage key used for lookup when a date is selected matches exactly the key written by the Daily Sales Report feature. The lookup key must be constructed by parsing the date input value with `new Date(dateStr)` and building the key as `dailyTotal_` + `year + \"-\" + (month+1) + \"-\" + day` (without zero-padding on month or day). If no data is stored for the selected date, display 0. The section container must have class `date-report` with styles: margin-top 20px, padding 15px, background #eef3f7, border-radius 8px, text-align center; its h3 must have margin-top 0; its date input must have padding 6px and font-size 15px. The section must be hidden during print.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-invoice-number-and-date-display-block-in-app-tsx-uses-the-correct-structure-and-generation-logic-the-invoice-number-must-be-generated-once-on-component-mount-using-zwt-yyyymmdd-xxxx-format-where-xxxx-math-floor-1000-math-random-9000-the-date-must-be-formatted-as-dd-mm-yyyy-zero-padded-day-and-month-full-4-digit-year-the-display-must-use-a-p-element-containing-b-invoice-no-b-span-id-invoiceno-a-br-then-b-date-b-span-id-billdate-both-fields-must-appear-above-the-customer-name-section-and-must-be-visible-in-print-output",
+      "title": "Verify the Invoice Number and Date display block in App.tsx uses the correct structure and generation logic. The invoice number must be generated once on component mount using `ZWT-YYYYMMDD-XXXX` format where XXXX = Math.floor(1000 + Math.random() * 9000). The date must be formatted as DD-MM-YYYY (zero-padded day and month, full 4-digit year). The display must use a `<p>` element containing `<b>Invoice No:</b>` + `<span id=\"invoiceNo\">`, a `<br>`, then `<b>Date:</b>` + `<span id=\"billDate\">`. Both fields must appear above the customer name section and must be visible in print output.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-page-and-app-container-styles-in-frontend-src-index-css-and-app-tsx-to-match-the-provided-css-reference-the-body-must-have-a-linear-gradient-background-135deg-ff5722-ff9800-the-app-container-must-have-max-width-420px-min-height-100vh-background-f5f5f5-and-be-centered-margin-auto-remove-any-conflicting-tailwind-or-inline-styles-that-override-these-values",
+      "title": "Update the global page and app container styles in frontend/src/index.css and App.tsx to match the provided CSS reference: the body must have a linear-gradient background (135deg, #ff5722, #ff9800); the .app container must have max-width 420px, min-height 100vh, background #f5f5f5, and be centered (margin: auto). Remove any conflicting Tailwind or inline styles that override these values.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-header-bar-style-in-app-tsx-or-index-css-so-that-the-header-element-has-background-ff5722-color-fff-padding-15px-text-align-center-font-size-20px-and-font-weight-bold-replace-any-existing-header-styles-that-conflict-with-these-values",
+      "title": "Update the header bar style in App.tsx (or index.css) so that the .header element has background #ff5722, color #fff, padding 15px, text-align center, font-size 20px, and font-weight bold. Replace any existing header styles that conflict with these values.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-card-component-styles-in-index-css-or-app-tsx-so-that-all-card-containers-have-background-fff-margin-12px-padding-15px-border-radius-12px-and-box-shadow-0-4px-10px-rgba-0-0-0-0-1-remove-or-override-any-existing-card-styles-that-conflict",
+      "title": "Update the .card component styles in index.css (or App.tsx) so that all card containers have background #fff, margin 12px, padding 15px, border-radius 12px, and box-shadow 0 4px 10px rgba(0,0,0,0.1). Remove or override any existing card styles that conflict.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-table-styles-in-billsummary-tsx-and-or-index-css-so-that-table-is-width-100-with-border-collapse-collapse-th-elements-have-background-ffe0d6-and-padding-8px-td-elements-have-padding-8px-and-border-bottom-1px-solid-eee-remove-any-dashed-border-or-other-conflicting-table-styles-that-override-these-values",
+      "title": "Update the table styles in BillSummary.tsx and/or index.css so that: table is width 100% with border-collapse collapse; th elements have background #ffe0d6 and padding 8px; td elements have padding 8px and border-bottom 1px solid #eee. Remove any dashed-border or other conflicting table styles that override these values.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-all-action-buttons-in-app-tsx-and-index-css-to-be-full-width-width-100-padding-12px-margin-top-8px-no-border-border-radius-8px-font-size-16px-and-cursor-pointer-apply-specific-colors-the-print-bill-button-must-use-class-print-with-background-4caf50-and-white-text-the-save-as-pdf-button-must-use-class-pdf-with-background-2196f3-and-white-text-the-clear-bill-button-must-use-class-clear-with-background-9e9e9e-and-white-text-remove-any-conflicting-inline-or-tailwind-button-styles",
+      "title": "Update all action buttons in App.tsx and index.css to be full-width (width 100%), padding 12px, margin-top 8px, no border, border-radius 8px, font-size 16px, and cursor pointer. Apply specific colors: the Print Bill button must use class 'print' with background #4caf50 and white text; the Save as PDF button must use class 'pdf' with background #2196f3 and white text; the Clear Bill button must use class 'clear' with background #9e9e9e and white text. Remove any conflicting inline or Tailwind button styles.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-invoice-number-and-date-display-card-so-that-the-label-reads-b-invoice-b-not-invoice-no-followed-by-a-span-id-invoiceno-then-a-br-then-b-date-b-followed-by-a-span-id-billdate-this-must-match-the-exact-html-structure-from-the-reference-p-b-invoice-b-span-id-invoiceno-span-br-b-date-b-span-id-billdate-span-p-keep-the-existing-zwt-yyyymmdd-xxxx-generation-logic-and-dd-mm-yyyy-date-format-unchanged",
+      "title": "In App.tsx, update the Invoice Number and Date display card so that the label reads '<b>Invoice:</b>' (not 'Invoice No:') followed by a <span id='invoiceNo'>, then a <br>, then '<b>Date:</b>' followed by a <span id='billDate'>. This must match the exact HTML structure from the reference: `<p><b>Invoice:</b> <span id=\"invoiceNo\"></span><br><b>Date:</b> <span id=\"billDate\"></span></p>`. Keep the existing ZWT-YYYYMMDD-XXXX generation logic and DD-MM-YYYY date format unchanged.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-billsummary-tsx-and-or-index-css-update-the-bill-summary-table-structure-to-match-the-reference-the-table-must-have-only-two-columns-item-and-as-th-headers-with-each-item-row-showing-the-item-name-and-its-price-the-table-must-also-include-a-final-total-row-with-class-total-showing-total-and-the-grand-total-value-in-a-td-with-id-grandtotal-remove-the-separate-qty-and-total-columns-if-they-conflict-with-this-two-column-layout-or-ensure-the-displayed-table-matches-the-reference-structure",
+      "title": "In BillSummary.tsx and/or index.css, update the bill summary table structure to match the reference: the table must have only two columns — 'Item' and '₹' (as th headers) — with each item row showing the item name and its price. The table must also include a final 'total' row with class 'total' showing 'Total' and the grand total value in a td with id='grandTotal'. Remove the separate 'Qty' and 'Total' columns if they conflict with this two-column layout, or ensure the displayed table matches the reference structure.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-rename-the-save-as-pdf-button-to-download-pdf-with-class-pdf-and-ensure-it-calls-window-print-when-clicked-the-print-bill-button-class-print-must-remain-separate-and-also-call-window-print-both-buttons-must-be-hidden-during-print-using-the-no-print-css-class-this-matches-the-reference-which-shows-both-a-print-class-button-labeled-print-bill-and-a-pdf-class-button-labeled-download-pdf",
+      "title": "In App.tsx, rename the '🖨️ Save as PDF' button to '⬇️ Download PDF' (with class 'pdf') and ensure it calls window.print() when clicked. The '🖨️ Print Bill' button (class 'print') must remain separate and also call window.print(). Both buttons must be hidden during print using the no-print CSS class. This matches the reference which shows both a 'print' class button labeled '🖨️ Print Bill' and a 'pdf' class button labeled '⬇️ Download PDF'.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-login-screen-to-the-app-in-app-tsx-the-login-screen-must-have-a-header-bar-displaying-zweeti-pro-login-styled-with-the-existing-header-class-background-ff5722-color-fff-padding-15px-text-align-center-font-size-20px-font-weight-bold-a-card-container-with-a-telephone-number-input-type-tel-maxlength-10-placeholder-enter-mobile-number-full-width-padding-12px-font-size-16px-and-a-continue-button-margin-top-10px-full-width-styled-with-the-existing-primary-button-style-the-login-screen-must-be-shown-initially-when-the-app-loads-before-the-main-billing-ui-when-the-user-enters-a-10-digit-mobile-number-and-clicks-continue-validate-that-the-input-is-exactly-10-digits-if-valid-hide-the-login-screen-and-show-the-main-billing-app-if-the-input-is-invalid-not-10-digits-show-an-inline-error-message-the-login-screen-must-use-the-existing-app-container-class-and-follow-the-established-visual-theme-gradient-body-background-white-card-orange-header",
+      "title": "Add a login screen to the app in App.tsx. The login screen must have: a header bar displaying 'ZWEETI Pro Login' styled with the existing .header class (background #ff5722, color #fff, padding 15px, text-align center, font-size 20px, font-weight bold); a card container with a telephone number input (type='tel', maxlength=10, placeholder='Enter Mobile Number', full-width, padding 12px, font-size 16px); and a 'Continue' button (margin-top 10px, full-width, styled with the existing primary button style). The login screen must be shown initially when the app loads (before the main billing UI). When the user enters a 10-digit mobile number and clicks 'Continue', validate that the input is exactly 10 digits; if valid, hide the login screen and show the main billing app. If the input is invalid (not 10 digits), show an inline error message. The login screen must use the existing .app container class and follow the established visual theme (gradient body background, white card, orange header).",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -115,6 +308,72 @@
       "id": "AR-5",
       "summary": "Add Invoice Number (auto-generated, e.g. ZWT-20260227-3842 format) and Date fields to the bill display",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Replace Download PDF button with a 'Save as PDF' button that calls window.print() via a printBill() function",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add a Daily Sales Report section showing today's date, today's total revenue, and a 'Clear Today' button to reset the daily total",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add a Date Wise Sales Report section with a date picker input; selecting a date shows the total sales for that date from stored data, displaying 'Date:' and 'Total Sale: ₹' fields",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Apply custom CSS styles to the Date Wise Sales Report section: class 'date-report' with margin-top:20px, padding:15px, background:#eef3f7, border-radius:8px, text-align:center; h3 margin-top:0; input padding:6px, font-size:15px",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add a GST toggle checkbox (checked by default, id='gstToggle') that calls calculateBill() on change, allowing users to toggle GST (5%) on or off in the bill summary. When unchecked, GST amount should be 0 and Grand Total equals Subtotal.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "In App.tsx, ensure that the `addToDailyTotal(grandTotal)` function is called with the current bill's grand total value at the moment the bill is cleared/reset (i.e., when the Clear Bill action is triggered and items are present). This call must happen before the bill items are cleared so that the grand total is captured and added to the daily sales total stored in localStorage under the `dailyTotal_YYYY-M-D` key format.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Verify the GST toggle checkbox in BillSummary.tsx (id='gstToggle', labeled 'Apply GST (5%)', checked by default) correctly computes bill totals: when checked, GST = subtotal * 0.05 and Grand Total = subtotal + GST; when unchecked, GST = 0 and Grand Total = subtotal. All three values (Subtotal, GST, Grand Total) must be displayed formatted to two decimal places. The checkbox toggle must cause the displayed values to update immediately. The grand total value exposed to App.tsx (for use in the daily sales report) must also reflect the current GST toggle state.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Update app styling to match new CSS reference: gradient body background (#ff5722 to #ff9800), app container max-width 420px #f5f5f5, orange #ff5722 header, white cards border-radius 12px box-shadow, table headers #ffe0d6, full-width buttons border-radius 8px (Print #4caf50, PDF #2196f3, Clear #9e9e9e)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add a login screen (id='loginScreen') with header 'ZWEETI Pro Login', a mobile number input (type=tel, maxlength=10), and a Continue button that calls a login() function",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "In App.tsx, ensure that after the user successfully completes login (enters a valid 10-digit mobile number and clicks 'Continue'), the main billing UI — which corresponds to the billing screen container — is made visible (display: block or equivalent). The billing screen must be hidden (display: none) before login and fully visible after a successful login validation. This must work with the existing React state-based login gate logic already present in App.tsx.",
+      "reqIds": [
+        "REQ-36"
+      ],
       "status": "pending"
     }
   ],

@@ -107,6 +107,12 @@
     background-color: #fff3ef;
   }
 
+  /* Total row styling */
+  tr.total td {
+    background-color: #fff3ef;
+    font-weight: 800;
+  }
+
   /* Qty badge */
   .zweeti-qty-badge {
     background-color: #ff5722;
@@ -165,20 +171,46 @@
     background-color: #1976d2;
   }
 
-  .zweeti-btn-clear {
-    background-color: #f5f5f5;
-    color: #555555;
-    font-weight: 600;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.15s;
+  /* Date Wise Sales Report section */
+  .date-report {
+    margin-top: 20px;
+    padding: 15px;
+    background: #eef3f7;
+    border-radius: 8px;
+    text-align: center;
   }
 
-  .zweeti-btn-clear:hover {
-    background-color: #e0e0e0;
+  .date-report h3 {
+    margin-top: 0;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .date-report input[type="date"] {
+    padding: 6px;
+    font-size: 15px;
+    border: 1px solid #c9d8e4;
+    border-radius: 5px;
+    outline: none;
+    font-family: 'Nunito', Arial, sans-serif;
+    background: #ffffff;
+    color: #333333;
+    transition: border-color 0.15s;
+  }
+
+  .date-report input[type="date"]:focus {
+    border-color: #ff5722;
+    box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.15);
+  }
+
+  /* No-print utility: hidden during print */
+  .no-print {
+    /* visible by default; hidden via @media print below */
   }
 }
 
@@ -197,6 +229,16 @@
     display: none !important;
   }
 
+  /* Hide print and pdf buttons during print */
+  button.print,
+  button.pdf {
+    display: none !important;
+  }
+
+  .date-report {
+    display: none !important;
+  }
+
   .zweeti-card {
     box-shadow: none !important;
     border: 1px solid #ddd;
@@ -204,6 +246,18 @@
 
   .zweeti-table-header {
     background-color: #ff5722 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .zweeti-qty-badge {
+    background-color: #ff5722 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  tr.total td {
+    background-color: #fff3ef !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
