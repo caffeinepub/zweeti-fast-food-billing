@@ -1,0 +1,16 @@
+{
+  "backend/main.mo": "Minimal Motoko backend actor with no methods defined.",
+  "feature_evidence.json": "Feature evidence report listing two implemented features: the ZWEETI Pro visual theme update across App.tsx, BillingForm.tsx, BillSummary.tsx, and index.css, and the Download Bill button that generates zweeti-bill.txt.",
+  "frontend-file-summaries.txt": "JSON document providing one-sentence summaries of each frontend source file for the Zweeti Fast Food Billing app.",
+  "frontend/index.css": "Tailwind CSS entry file defining OKLCH-based CSS custom properties for light and dark themes including colors, radius, and sidebar tokens.",
+  "frontend/index.html": "HTML entry point that loads Nunito and Nunito Sans fonts from Google Fonts and mounts the React app at the root div.",
+  "frontend/src/App.tsx": "Main React component managing customer name and bill items state, rendering the full billing UI with header, form, summary, Print Bill, Download Bill (downloads zweeti-bill.txt), and Clear All buttons.",
+  "frontend/src/components/BillingForm.tsx": "Billing form component with a 13-item menu dropdown, quantity input, and an orange Add Item button styled with ZWEETI Pro orange accents and dashed borders.",
+  "frontend/src/components/BillSummary.tsx": "Bill summary table component displaying items with orange header, dashed row borders, GST (5%) calculation, grand total in orange, and per-item remove buttons hidden on print.",
+  "frontend/src/hooks/useActor.ts": "Custom React hook that creates and caches an ICP backend actor using React Query, supporting both anonymous and authenticated (Internet Identity) access and invalidating dependent queries when the actor changes.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides a React context and hook for Internet Identity authentication using DFINITY's AuthClient, exposing login/logout functions and status flags.",
+  "frontend/src/index.css": "Global CSS file defining Tailwind directives, ZWEETI Pro brand color variables (orange, green, blue), and reusable component classes for cards, buttons, tables, and print styles.",
+  "frontend/src/main.tsx": "Application entry point that mounts the React app with QueryClientProvider and InternetIdentityProvider wrapping the root App component.",
+  "frontend/tailwind.config.js": "Tailwind CSS configuration extending the theme with ZWEETI brand colors, Nunito font, OKLCH CSS variable-based semantic color tokens, and plugins for animation, typography, and container queries.",
+  "project_state.json": "Project state metadata describing the Zweeti Fast Food Billing app's architecture, existing features, known issues, and design reference details including the orange/green/blue color scheme and menu items."
+}

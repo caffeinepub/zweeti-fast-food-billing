@@ -1,0 +1,67 @@
+{
+  "kind": "build_request",
+  "title": "Update visual theme and add Download Bill button (ZWEETI Pro reference design)",
+  "projectName": "Zweeti Pro Billing",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-6",
+      "text": "Update the visual theme across App.tsx, BillingForm.tsx, and BillSummary.tsx to match the ZWEETI Pro reference design: use grey background (#f2f2f2) for the page, white card container (420px wide, rounded corners, box-shadow), orange accent #ff5722 for headings, table header backgrounds, and primary buttons, dashed borders for table rows, and a centered layout.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "background:#f2f2f2",
+          "color:#ff5722",
+          "border-bottom:1px dashed #ccc",
+          "background:#ff5722",
+          "width:420px"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Page background is grey (#f2f2f2)",
+        "Card container is white, 420px wide, with rounded corners and a subtle box-shadow",
+        "Headings and table header backgrounds use orange #ff5722",
+        "Table row borders are dashed (#ccc)",
+        "Layout is centered and mobile-friendly"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add a 'Download Bill' button styled in blue (#2196f3) with white text, placed alongside the existing Print Bill button in the actions area of App.tsx. Clicking it should generate and download a plain-text or HTML representation of the current bill (customer name, items, subtotal, GST, grand total) as a file named 'zweeti-bill.txt'. The Download Bill button must also be hidden during print.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          ".download-btn{ background:#2196f3; color:white; }",
+          "class=\"download-btn\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 'Download Bill' button is visible next to the Print Bill button",
+        "The button is styled with blue (#2196f3) background and white text",
+        "Clicking the button triggers a file download named 'zweeti-bill.txt' containing the full bill details",
+        "The Download Bill button is hidden when the browser's print dialog is triggered"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify files under frontend/src/hooks/ or frontend/src/main.tsx",
+    "Do not change the existing Zweeti 13-item menu in BillingForm.tsx",
+    "Do not alter the GST (5%) calculation logic"
+  ],
+  "nonGoals": [
+    "Adding new menu items or changing existing prices",
+    "Backend changes",
+    "Authentication or user login features",
+    "Real-time order tracking"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

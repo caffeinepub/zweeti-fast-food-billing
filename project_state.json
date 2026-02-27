@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided a new reference HTML design ('ZWEETI Pro Billing') with updated styling: orange #ff5722 accent, white card on grey background, dashed table borders, a Print Bill button (green #4caf50), and a Download Bill button (blue #2196f3).",
+  "architectural_notes": [
+    "Single-page HTML app with inline CSS and vanilla JS",
+    "GST fixed at 5% on subtotal",
+    "Print bill hides buttons via @media print",
+    "Menu items updated per user reference: 13 items including Chaumin variants, Momos, Pasta, Rolls, and Burgers",
+    "New reference design uses grey body background (#f2f2f2), orange #ff5722 accent, dashed table borders, and a download button alongside print"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-fast-food-billing-form-with-the-following-fields-customer-name-text-input-item-selector-dropdown-with-options-burger-80-pizza-150-fries-60-cold-drink-40-auto-populated-price-read-only-and-quantity-number-input-include-an-add-item-button-that-appends-the-selected-item-to-the-bill-table",
+      "title": "Create a fast food billing form with the following fields: Customer Name (text input), Item selector (dropdown with options: Burger ₹80, Pizza ₹150, Fries ₹60, Cold Drink ₹40), auto-populated Price (read-only), and Quantity (number input). Include an 'Add Item' button that appends the selected item to the bill table.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-bill-summary-table-with-columns-item-price-qty-and-total-below-the-table-show-subtotal-gst-5-and-grand-total-all-updated-dynamically-as-items-are-added",
+      "title": "Display a bill summary table with columns: Item, Price (₹), Qty, and Total. Below the table show Subtotal, GST (5%), and Grand Total, all updated dynamically as items are added.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-include-a-print-bill-button-that-triggers-the-browser-s-print-dialog-all-action-buttons-must-be-hidden-during-print-so-only-the-bill-content-is-printed",
+      "title": "Include a 'Print Bill' button that triggers the browser's print dialog. All action buttons must be hidden during print so only the bill content is printed.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-warm-fast-food-brand-visual-theme-deep-orange-e65100-as-the-primary-accent-color-for-headings-table-headers-and-primary-buttons-green-2e7d32-for-the-print-bill-button-a-warm-off-white-cream-background-fff3e0-white-card-container-with-rounded-corners-and-subtle-shadow-typography-should-be-clean-and-legible-layout-should-be-mobile-friendly-centered-max-width-500px",
+      "title": "Apply a warm fast-food brand visual theme: deep orange (#e65100) as the primary accent color for headings, table headers, and primary buttons; green (#2e7d32) for the Print Bill button; a warm off-white/cream background (#fff3e0); white card container with rounded corners and subtle shadow. Typography should be clean and legible. Layout should be mobile-friendly, centered, max-width 500px.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-existing-menu-item-dropdown-options-in-billingform-tsx-with-the-following-zweeti-menu-items-and-prices-chaumin-40-paneer-chaumin-60-mushroom-chaumin-60-chilli-chaumin-50-veg-momo-60-paneer-momos-80-veg-pasta-40-paneer-pasta-60-cream-pasta-60-veg-roll-40-paneer-roll-60-veg-burger-30-paneer-burger-50-remove-the-old-placeholder-items-burger-80-pizza-150-fries-60-cold-drink-40",
+      "title": "Replace the existing menu item dropdown options in BillingForm.tsx with the following Zweeti menu items and prices: Chaumin ₹40, Paneer Chaumin ₹60, Mushroom Chaumin ₹60, Chilli Chaumin ₹50, Veg Momo ₹60, Paneer Momos ₹80, Veg Pasta ₹40, Paneer Pasta ₹60, Cream Pasta ₹60, Veg Roll ₹40, Paneer Roll ₹60, Veg Burger ₹30, Paneer Burger ₹50. Remove the old placeholder items (Burger ₹80, Pizza ₹150, Fries ₹60, Cold Drink ₹40).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-visual-theme-across-app-tsx-billingform-tsx-and-billsummary-tsx-to-match-the-zweeti-pro-reference-design-use-grey-background-f2f2f2-for-the-page-white-card-container-420px-wide-rounded-corners-box-shadow-orange-accent-ff5722-for-headings-table-header-backgrounds-and-primary-buttons-dashed-borders-for-table-rows-and-a-centered-layout",
+      "title": "Update the visual theme across App.tsx, BillingForm.tsx, and BillSummary.tsx to match the ZWEETI Pro reference design: use grey background (#f2f2f2) for the page, white card container (420px wide, rounded corners, box-shadow), orange accent #ff5722 for headings, table header backgrounds, and primary buttons, dashed borders for table rows, and a centered layout.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-download-bill-button-styled-in-blue-2196f3-with-white-text-placed-alongside-the-existing-print-bill-button-in-the-actions-area-of-app-tsx-clicking-it-should-generate-and-download-a-plain-text-or-html-representation-of-the-current-bill-customer-name-items-subtotal-gst-grand-total-as-a-file-named-zweeti-bill-txt-the-download-bill-button-must-also-be-hidden-during-print",
+      "title": "Add a 'Download Bill' button styled in blue (#2196f3) with white text, placed alongside the existing Print Bill button in the actions area of App.tsx. Clicking it should generate and download a plain-text or HTML representation of the current bill (customer name, items, subtotal, GST, grand total) as a file named 'zweeti-bill.txt'. The Download Bill button must also be hidden during print.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Update menu items to match reference design: Chaumin ₹40, Paneer Chaumin ₹60, Mushroom Chaumin ₹60, Chilli Chaumin ₹50, Veg Momo ₹60, Paneer Momos ₹80, Veg Pasta ₹40, Paneer Pasta ₹60, Cream Pasta ₹60, Veg Roll ₹40, Paneer Roll ₹60, Veg Burger ₹30, Paneer Burger ₹50",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add a Download Bill button (blue #2196f3) alongside the Print Bill button",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update visual theme to match new reference: grey background (#f2f2f2), orange accent #ff5722, dashed table borders, 420px card width",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Zweeti Fast Food Billing",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

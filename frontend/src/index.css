@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* ZWEETI Pro brand colors */
+    --zweeti-orange: #ff5722;
+    --zweeti-orange-dark: #e64a19;
+    --zweeti-blue: #2196f3;
+    --zweeti-green: #4caf50;
+    --zweeti-green-dark: #388e3c;
+
+    /* OKLCH semantic tokens */
+    --background: 0.97 0.025 80;
+    --foreground: 0.2 0.02 40;
+    --card: 1 0 0;
+    --card-foreground: 0.2 0.02 40;
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0.02 40;
+    --primary: 0.55 0.19 42;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.95 0.02 80;
+    --secondary-foreground: 0.3 0.02 40;
+    --muted: 0.95 0.015 80;
+    --muted-foreground: 0.55 0.02 40;
+    --accent: 0.95 0.03 80;
+    --accent-foreground: 0.3 0.02 40;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.9 0.01 80;
+    --input: 0.9 0.01 80;
+    --ring: 0.55 0.19 42;
+    --chart-1: 0.55 0.19 42;
+    --chart-2: 0.42 0.13 152;
+    --chart-3: 0.65 0.15 80;
+    --chart-4: 0.7 0.18 60;
+    --chart-5: 0.5 0.15 30;
+    --sidebar: 0.97 0.025 80;
+    --sidebar-foreground: 0.2 0.02 40;
+    --sidebar-primary: 0.55 0.19 42;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.95 0.02 80;
+    --sidebar-accent-foreground: 0.3 0.02 40;
+    --sidebar-border: 0.9 0.01 80;
+    --sidebar-ring: 0.55 0.19 42;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground;
+    font-family: 'Nunito', Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+}
+
+@layer components {
+  /* Page background */
+  .zweeti-page-bg {
+    background-color: #f2f2f2;
+  }
+
+  /* Header */
+  .zweeti-header {
+    background-color: #ff5722;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Bill box container - centered, 420px wide */
+  .zweeti-bill-box {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* White card */
+  .zweeti-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+  }
+
+  /* Orange text */
+  .zweeti-orange-text {
+    color: #ff5722;
+  }
+
+  /* Table header - orange background */
+  .zweeti-table-header {
+    background-color: #ff5722;
+    color: #ffffff;
+  }
+
+  /* Table rows with dashed bottom border */
+  .zweeti-table-row {
+    border-bottom: 1px dashed #cccccc;
+    transition: background-color 0.15s;
+  }
+
+  .zweeti-table-row:hover {
+    background-color: #fff3ef;
+  }
+
+  /* Qty badge */
+  .zweeti-qty-badge {
+    background-color: #ff5722;
+  }
+
+  /* Buttons */
+  .zweeti-btn-orange {
+    background-color: #ff5722;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.15s, transform 0.1s;
+  }
+
+  .zweeti-btn-orange:hover {
+    background-color: #e64a19;
+  }
+
+  .zweeti-btn-orange:active {
+    transform: scale(0.98);
+  }
+
+  .zweeti-btn-green {
+    background-color: #4caf50;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.15s;
+  }
+
+  .zweeti-btn-green:hover {
+    background-color: #388e3c;
+  }
+
+  .zweeti-btn-blue {
+    background-color: #2196f3;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.15s;
+  }
+
+  .zweeti-btn-blue:hover {
+    background-color: #1976d2;
+  }
+
+  .zweeti-btn-clear {
+    background-color: #f5f5f5;
+    color: #555555;
+    font-weight: 600;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.15s;
+  }
+
+  .zweeti-btn-clear:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+
+  .zweeti-page-bg {
+    background-color: #ffffff !important;
+  }
+
+  .print\:hidden,
+  .no-print {
+    display: none !important;
+  }
+
+  .zweeti-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
+
+  .zweeti-table-header {
+    background-color: #ff5722 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

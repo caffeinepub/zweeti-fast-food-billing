@@ -1,0 +1,45 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-visual-theme-across-app-tsx-billingform-tsx-and-billsummary-tsx-to-match-the-zweeti-pro-reference-design-use-grey-background-f2f2f2-for-the-page-white-card-container-420px-wide-rounded-corners-box-shadow-orange-accent-ff5722-for-headings-table-header-backgrounds-and-primary-buttons-dashed-borders-for-table-rows-and-a-centered-layout",
+      "featureTitle": "Update the visual theme across App.tsx, BillingForm.tsx, and BillSummary.tsx to match the ZWEETI Pro reference design: use grey background (#f2f2f2) for the page, white card container (420px wide, rounded corners, box-shadow), orange accent #ff5722 for headings, table header backgrounds, and primary buttons, dashed borders for table rows, and a centered layout.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/BillSummary.tsx",
+        "frontend/src/components/BillingForm.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-download-bill-button-styled-in-blue-2196f3-with-white-text-placed-alongside-the-existing-print-bill-button-in-the-actions-area-of-app-tsx-clicking-it-should-generate-and-download-a-plain-text-or-html-representation-of-the-current-bill-customer-name-items-subtotal-gst-grand-total-as-a-file-named-zweeti-bill-txt-the-download-bill-button-must-also-be-hidden-during-print",
+      "featureTitle": "Add a 'Download Bill' button styled in blue (#2196f3) with white text, placed alongside the existing Print Bill button in the actions area of App.tsx. Clicking it should generate and download a plain-text or HTML representation of the current bill (customer name, items, subtotal, GST, grand total) as a file named 'zweeti-bill.txt'. The Download Bill button must also be hidden during print.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
