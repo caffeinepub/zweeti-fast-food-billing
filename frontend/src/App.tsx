@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import BillingForm from './components/BillingForm';
 import BillSummary from './components/BillSummary';
-import { Printer, UtensilsCrossed, Heart, BarChart2, RefreshCw, CalendarSearch } from 'lucide-react';
+import { Printer, UtensilsCrossed, Heart, BarChart2, RefreshCw, CalendarSearch, LogOut } from 'lucide-react';
 
 export interface BillItem {
   id: number;
@@ -56,7 +56,6 @@ export default function App() {
   // Login state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileNumber, setMobileNumber] = useState('');
-  const [loginError, setLoginError] = useState('');
 
   // Billing state
   const [customerName, setCustomerName] = useState('');
@@ -72,6 +71,13 @@ export default function App() {
   const [dateWiseTotal, setDateWiseTotal] = useState(0);
   const [dateWiseFormatted, setDateWiseFormatted] = useState('');
 
+  // Auto-login: check localStorage on mount
+  useEffect(() => {
+    if (localStorage.getItem('zweetiUser')) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   useEffect(() => {
     setInvoiceNumber(generateInvoiceNumber());
     setBillDate(formatDate(new Date()));
@@ -80,12 +86,17 @@ export default function App() {
 
   const handleLogin = () => {
     const trimmed = mobileNumber.trim();
-    if (/^\d{10}$/.test(trimmed)) {
-      setLoginError('');
-      setIsLoggedIn(true);
-    } else {
-      setLoginError('Please enter a valid 10-digit mobile number.');
+    if (trimmed.length !== 10) {
+      alert('Enter valid 10 digit mobile number');
+      return;
     }
+    localStorage.setItem('zweetiUser', trimmed);
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('zweetiUser');
+    location.reload();
   };
 
   const handleMobileKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -194,24 +205,16 @@ export default function App() {
               <p className="text-sm text-gray-500 mb-5">Enter your mobile number to continue.</p>
 
               <input
+                id="mobile"
                 type="tel"
                 value={mobileNumber}
-                onChange={e => {
-                  setMobileNumber(e.target.value);
-                  if (loginError) setLoginError('');
-                }}
+                onChange={e => setMobileNumber(e.target.value)}
                 onKeyDown={handleMobileKeyDown}
                 placeholder="Enter Mobile Number"
                 maxLength={10}
                 style={{ width: '100%', padding: '12px', fontSize: '16px' }}
                 className="rounded-[5px] border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5722]/30 focus:border-[#ff5722] text-gray-800 font-medium placeholder:text-gray-400 transition-all"
               />
-
-              {loginError && (
-                <p className="mt-2 text-sm font-semibold" style={{ color: '#e53935' }}>
-                  ⚠️ {loginError}
-                </p>
-              )}
 
               <button
                 onClick={handleLogin}
@@ -420,6 +423,17 @@ export default function App() {
                 </span>
               </p>
             </div>
+          </div>
+
+          {/* Logout Button */}
+          <div className="no-print">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 font-semibold text-sm transition-colors border border-gray-200"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
           </div>
 
         </div>

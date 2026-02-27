@@ -1,23 +1,55 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Show billing screen after login (billingScreen div visibility fix)",
+  "title": "Implement auto-login from localStorage and logout function for the login screen",
   "requirements": [
     {
       "id": "REQ-36",
-      "summary": "Ensure billing screen visibility is controlled by React state after successful login, hiding it before login and showing it after valid 10-digit mobile number entry",
+      "summary": "Implement auto-login on component mount by checking localStorage for 'zweetiUser' and automatically showing the billing UI if present",
       "acceptanceCriteria": [
-        "When the app loads, the main billing UI (billing screen) is not visible — only the login screen is shown.",
-        "After the user enters a valid 10-digit mobile number and clicks 'Continue', the login screen is hidden and the billing screen becomes fully visible.",
-        "If the mobile number is invalid (not 10 digits), the billing screen remains hidden and an error message is shown.",
-        "The billing screen container corresponds to the section that houses BillingForm, BillSummary, invoice details, daily/date-wise sales reports, and action buttons.",
-        "The transition between login screen and billing screen is controlled by React state (not direct DOM style manipulation), consistent with the existing implementation pattern in App.tsx."
+        "On page load, if localStorage contains the key 'zweetiUser', the login screen is not shown and the billing UI is displayed immediately.",
+        "If localStorage does not contain 'zweetiUser', the login screen is shown as normal.",
+        "The auto-login check runs once on component mount using a useEffect hook."
       ],
       "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Review the existing login gate state logic and ensure that the billing screen container (the main section containing BillingForm, BillSummary, daily totals, and sales reports) is conditionally rendered based on the login state. The billing UI must be hidden (not rendered or display:none via className) when isLoggedIn is false, and fully visible when isLoggedIn is true after successful 10-digit mobile number validation. Ensure no direct DOM manipulation is used; rely entirely on React state and conditional rendering or CSS classes controlled by state."
+          "description": "Add a useEffect hook that runs on component mount to check if 'zweetiUser' exists in localStorage. If present, set the isLoggedIn state to true to skip the login screen and show the billing UI directly. This replaces any window.onload logic with proper React lifecycle patterns."
+        }
+      ]
+    },
+    {
+      "id": "REQ-37",
+      "summary": "Add logout function that clears 'zweetiUser' from localStorage and reloads the page, with a visible Logout button in the billing UI",
+      "acceptanceCriteria": [
+        "A 'Logout' button is visible in the main billing UI and hidden during print (using the no-print CSS class).",
+        "Clicking 'Logout' removes the 'zweetiUser' key from localStorage.",
+        "After logout, the page reloads and the login screen is displayed.",
+        "The logout button is styled consistently with the existing action buttons (full-width, border-radius 8px, appropriate background color)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Create a logout function that removes the 'zweetiUser' key from localStorage and calls location.reload() to refresh the page. Add a 'Logout' button in the billing UI section (alongside or near other action buttons like 'Generate Invoice') with the 'no-print' class to hide it during print, styled consistently with existing buttons (full-width, rounded-lg, appropriate background color)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-38",
+      "summary": "Update login validation to require exactly 10 digits, show alert for invalid input, and store mobile number in localStorage under 'zweetiUser' on success",
+      "acceptanceCriteria": [
+        "If the entered mobile number is not exactly 10 digits, an alert displays 'Enter valid 10 digit mobile number' and the billing screen is not shown.",
+        "If the entered mobile number is exactly 10 digits, it is stored in localStorage under the key 'zweetiUser'.",
+        "After successful login, the login screen is hidden and the billing UI is shown.",
+        "The existing inline error message approach in the login screen (if any) is reconciled with or replaced by this alert-based validation to match the reference script."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update the login handler (Continue button click) to validate that the mobile number input is exactly 10 digits in length. If validation fails, show an alert with the message 'Enter valid 10 digit mobile number' and abort the login. If valid, store the mobile number in localStorage under the key 'zweetiUser', set isLoggedIn state to true, and show the billing UI. Replace or reconcile any existing inline error message approach with this alert-based validation."
         }
       ]
     }

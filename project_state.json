@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 45,
-  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated CSS reference design with: gradient body background (linear-gradient 135deg #ff5722 to #ff9800), app container max-width 420px with #f5f5f5 background, orange #ff5722 header bar, white cards with border-radius 12px and box-shadow, table headers with #ffe0d6 background, buttons full-width with border-radius 8px (Print: #4caf50, PDF: #2196f3, Clear: #9e9e9e). User has also requested Invoice Number and Date fields. Save as PDF button calls window.print(). GST toggle checkbox (checked by default) toggles GST (5%) on/off. A login screen (ZWEETI Pro Login) has been requested with a mobile number input and a Continue button.",
+  "projectStateVersion": 47,
+  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated CSS reference design with: gradient body background (linear-gradient 135deg #ff5722 to #ff9800), app container max-width 420px with #f5f5f5 background, orange #ff5722 header bar, white cards with border-radius 12px and box-shadow, table headers with #ffe0d6 background, buttons full-width with border-radius 8px (Print: #4caf50, PDF: #2196f3, Clear: #9e9e9e). User has also requested Invoice Number and Date fields. Save as PDF button calls window.print(). GST toggle checkbox (checked by default) toggles GST (5%) on/off. A login screen (ZWEETI Pro Login) has been requested with mobile number input, Continue button, auto-login from localStorage, and a logout function that clears localStorage and reloads the page.",
   "architectural_notes": [
     "Single-page HTML app with inline CSS and vanilla JS",
     "Print bill hides buttons via @media print",
@@ -9,7 +9,8 @@
     "Save as PDF button uses window.print() (printBill function), replacing the open-in-new-tab PDF approach",
     "Date Wise Sales Report uses localStorage key format 'dailyTotal_YYYY-M-D' (non-zero-padded month/day) via getKeyFromDate()",
     "GST is togglable via a checkbox (id='gstToggle'); when unchecked, GST is 0 and Grand Total equals Subtotal",
-    "Body uses gradient background (135deg #ff5722 to #ff9800); app container is max-width 420px with #f5f5f5 background; header bar is #ff5722; cards are white with border-radius 12px and box-shadow"
+    "Body uses gradient background (135deg #ff5722 to #ff9800); app container is max-width 420px with #f5f5f5 background; header bar is #ff5722; cards are white with border-radius 12px and box-shadow",
+    "Login state persisted in localStorage key 'zweetiUser'; auto-login on page load if key exists; logout clears key and reloads"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -277,6 +278,30 @@
         "REQ-35"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-login-screen-logic-so-that-on-component-mount-equivalent-to-window-onload-if-zweetiuser-exists-in-localstorage-automatically-skip-the-login-screen-and-show-the-main-billing-ui-directly-without-requiring-the-user-to-re-enter-their-mobile-number",
+      "title": "In App.tsx, update the login screen logic so that on component mount (equivalent to window.onload), if 'zweetiUser' exists in localStorage, automatically skip the login screen and show the main billing UI directly — without requiring the user to re-enter their mobile number.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-add-a-logout-function-that-removes-the-zweetiuser-key-from-localstorage-and-reloads-the-page-location-reload-effectively-returning-the-user-to-the-login-screen-add-a-logout-button-visible-in-the-main-billing-ui-hidden-during-print-that-calls-this-logout-function-when-clicked",
+      "title": "In App.tsx, add a logout function that removes the 'zweetiUser' key from localStorage and reloads the page (location.reload()), effectively returning the user to the login screen. Add a 'Logout' button visible in the main billing UI (hidden during print) that calls this logout function when clicked.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-login-validation-so-that-when-the-user-enters-a-mobile-number-and-clicks-continue-if-the-input-is-not-exactly-10-digits-an-alert-is-shown-with-the-message-enter-valid-10-digit-mobile-number-matching-the-reference-script-behavior-and-the-login-is-aborted-if-valid-store-the-mobile-number-in-localstorage-under-the-key-zweetiuser-and-show-the-billing-screen",
+      "title": "In App.tsx, update the login validation so that when the user enters a mobile number and clicks 'Continue', if the input is not exactly 10 digits, an alert is shown with the message 'Enter valid 10 digit mobile number' (matching the reference script behavior), and the login is aborted. If valid, store the mobile number in localStorage under the key 'zweetiUser' and show the billing screen.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -369,11 +394,9 @@
       "status": "pending"
     },
     {
-      "id": "AR-19",
-      "summary": "In App.tsx, ensure that after the user successfully completes login (enters a valid 10-digit mobile number and clicks 'Continue'), the main billing UI — which corresponds to the billing screen container — is made visible (display: block or equivalent). The billing screen must be hidden (display: none) before login and fully visible after a successful login validation. This must work with the existing React state-based login gate logic already present in App.tsx.",
-      "reqIds": [
-        "REQ-36"
-      ],
+      "id": "AR-20",
+      "summary": "Implement login/logout logic: login() validates 10-digit mobile, stores in localStorage ('zweetiUser'), calls showBilling(). showBilling() hides loginScreen and shows billingScreen. window.onload auto-logs in if 'zweetiUser' exists in localStorage. logout() removes 'zweetiUser' from localStorage and calls location.reload().",
+      "reqIds": [],
       "status": "pending"
     }
   ],

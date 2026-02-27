@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the billing screen visibility so it only appears after a successful login, controlled via React state in App.tsx.
+**Goal:** Add auto-login from localStorage, a logout button, and improved mobile number validation to the Zweeti Pro login screen.
 
 **Planned changes:**
-- Ensure the billing screen container is hidden (not rendered/visible) when the app first loads and only the login screen is shown.
-- After the user enters a valid 10-digit mobile number and clicks "Continue", update React state to hide the login screen and show the billing screen.
-- If the mobile number is invalid, keep the billing screen hidden and display an error message.
-- Replace any direct DOM style manipulation (`display: none/block`) with React state-based conditional rendering/visibility, consistent with the existing App.tsx pattern.
+- On component mount, check if `zweetiUser` exists in localStorage; if so, skip the login screen and show the billing UI directly (using a `useEffect` hook).
+- Add a logout function that removes `zweetiUser` from localStorage and reloads the page; show a "Logout" button in the billing UI that is hidden during print.
+- Update login validation so that if the entered mobile number is not exactly 10 digits, an alert shows `'Enter valid 10 digit mobile number'` and login is aborted; if valid, store the number in localStorage under `zweetiUser` and show the billing screen.
 
-**User-visible outcome:** Users see only the login screen on load. After entering a valid 10-digit mobile number and clicking "Continue", the full billing UI becomes visible. Invalid numbers keep the billing screen hidden with an error shown.
+**User-visible outcome:** Users who have previously logged in are taken directly to the billing UI on page load. Users can log out via a button that returns them to the login screen. The login form enforces a 10-digit mobile number with an alert for invalid input.
