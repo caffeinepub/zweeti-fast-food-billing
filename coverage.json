@@ -1,46 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T08:06:16.915Z",
+  "generatedAt": "2026-02-27T08:49:56.674Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-36",
-        "summary": "In App.tsx, update the login screen logic so that on component mount (equivalent to window.onload), if 'zweetiUser' exists in localStorage, automatically skip the login screen and show the main billing UI directly — without requiring the user to re-enter their mobile number.",
+        "id": "REQ-50",
+        "summary": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/firebase.ts"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-37",
-        "summary": "In App.tsx, add a logout function that removes the 'zweetiUser' key from localStorage and reloads the page (location.reload()), effectively returning the user to the login screen. Add a 'Logout' button visible in the main billing UI (hidden during print) that calls this logout function when clicked.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-38",
-        "summary": "In App.tsx, update the login validation so that when the user enters a mobile number and clicks 'Continue', if the input is not exactly 10 digits, an alert is shown with the message 'Enter valid 10 digit mobile number' (matching the reference script behavior), and the login is aborted. If valid, store the mobile number in localStorage under the key 'zweetiUser' and show the billing screen.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/firebase.ts"
         ]
       }
     ]
@@ -50,7 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
+    "frontend/src/firebase.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

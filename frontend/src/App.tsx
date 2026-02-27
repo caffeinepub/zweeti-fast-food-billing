@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BillingForm from './components/BillingForm';
 import BillSummary from './components/BillSummary';
-import { Printer, UtensilsCrossed, Heart, BarChart2, RefreshCw, CalendarSearch, LogOut } from 'lucide-react';
+import { Printer, UtensilsCrossed, Heart, BarChart2, RefreshCw, CalendarSearch, Loader2 } from 'lucide-react';
+import { auth, RecaptchaVerifier, signInWithPhoneNumber } from './firebase';
+import type { ConfirmationResult } from './firebase';
 
 export interface BillItem {
   id: number;
@@ -28,12 +30,10 @@ function formatDate(date: Date): string {
   return `${dd}-${mm}-${yyyy}`;
 }
 
-// Builds the localStorage key using non-zero-padded month and day
-// Format: dailyTotal_YYYY-M-D  (matches reference script key format)
 function getKeyFromDate(d: Date): string {
   const year = d.getFullYear();
-  const month = d.getMonth() + 1; // non-zero-padded
-  const day = d.getDate();        // non-zero-padded
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
   return `dailyTotal_${year}-${month}-${day}`;
 }
 
@@ -55,7 +55,16 @@ function saveDailyTotal(total: number): void {
 export default function App() {
   // Login state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState('');
+
+  // OTP flow state — pre-filled with test credentials
+  const [phone, setPhone] = useState('+911234567890');
+  const [otp, setOtp] = useState('123456');
+  const [otpSent, setOtpSent] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const confirmationResultRef = useRef<ConfirmationResult | null>(null);
+  const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
 
   // Billing state
   const [customerName, setCustomerName] = useState('');
@@ -84,25 +93,73 @@ export default function App() {
     setDailyTotal(loadDailyTotal());
   }, []);
 
-  const handleLogin = () => {
-    const trimmed = mobileNumber.trim();
-    if (trimmed.length !== 10) {
-      alert('Enter valid 10 digit mobile number');
+  // Initialize invisible RecaptchaVerifier when login screen mounts
+  useEffect(() => {
+    if (!isLoggedIn && !otpSent) {
+      const timer = setTimeout(() => {
+        if (!recaptchaVerifierRef.current) {
+          // Use invisible reCAPTCHA matching the Firebase CDN API:
+          // new RecaptchaVerifier(containerId, { size: 'invisible' }, auth)
+          const verifier = new RecaptchaVerifier('recaptcha', { size: 'invisible' }, auth);
+          verifier.render();
+          recaptchaVerifierRef.current = verifier;
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoggedIn, otpSent]);
+
+  const sendOTP = async () => {
+    setLoginError('');
+    const trimmedPhone = phone.trim();
+    if (!trimmedPhone || trimmedPhone.length < 10) {
+      setLoginError('Please enter a valid phone number (e.g. +91XXXXXXXXXX).');
       return;
     }
-    localStorage.setItem('zweetiUser', trimmed);
-    setIsLoggedIn(true);
+    setSendingOtp(true);
+    try {
+      if (!recaptchaVerifierRef.current) {
+        // Create invisible RecaptchaVerifier: new RecaptchaVerifier(containerId, options, auth)
+        recaptchaVerifierRef.current = new RecaptchaVerifier('recaptcha', { size: 'invisible' }, auth);
+        await recaptchaVerifierRef.current.render();
+      }
+      const result = await signInWithPhoneNumber(auth, trimmedPhone, recaptchaVerifierRef.current);
+      confirmationResultRef.current = result;
+      setOtpSent(true);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to send OTP. Please try again.';
+      setLoginError(message);
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOTP = async () => {
+    setLoginError('');
+    if (!confirmationResultRef.current) {
+      setLoginError('Please request an OTP first.');
+      return;
+    }
+    if (!otp.trim()) {
+      setLoginError('Please enter the OTP.');
+      return;
+    }
+    setVerifyingOtp(true);
+    try {
+      const result = await confirmationResultRef.current.confirm(otp.trim());
+      // Persist authentication to localStorage
+      localStorage.setItem('zweetiUser', result.user.uid);
+      setIsLoggedIn(true);
+    } catch (_err: unknown) {
+      setLoginError('Invalid OTP. Please try again.');
+    } finally {
+      setVerifyingOtp(false);
+    }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('zweetiUser');
     location.reload();
-  };
-
-  const handleMobileKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleLogin();
-    }
   };
 
   const handleAddItem = (name: string, price: number, qty: number) => {
@@ -118,14 +175,12 @@ export default function App() {
     setBillItems(prev => prev.filter(item => item.id !== id));
   };
 
-  // Adds the given amount to today's daily total in state and localStorage
   const addToDailyTotal = (amount: number) => {
     const newTotal = dailyTotal + amount;
     setDailyTotal(newTotal);
     saveDailyTotal(newTotal);
   };
 
-  // Compute GST-aware totals (mirrors calculateBill reference logic)
   const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
   const gst = applyGst ? subtotal * 0.05 : 0;
   const grandTotal = subtotal + gst;
@@ -144,22 +199,18 @@ export default function App() {
 
   const clearDailyTotal = () => {
     setDailyTotal(0);
-    // Remove the key so date-wise lookup returns 0 (not stored "0")
     localStorage.removeItem(getTodayKey());
   };
 
   const handleDateWiseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value; // YYYY-MM-DD from input
+    const value = e.target.value;
     setSelectedDate(value);
     if (value) {
-      // Parse the date string using new Date() to extract non-zero-padded parts
       const d = new Date(value);
-      // Format as DD-MM-YYYY for display
       const dd = String(d.getDate()).padStart(2, '0');
       const mm = String(d.getMonth() + 1).padStart(2, '0');
       const yyyy = d.getFullYear();
       setDateWiseFormatted(`${dd}-${mm}-${yyyy}`);
-      // Build key using same format as Daily Sales Report: dailyTotal_YYYY-M-D (non-zero-padded)
       const key = getKeyFromDate(d);
       const stored = localStorage.getItem(key);
       setDateWiseTotal(stored ? parseFloat(stored) : 0);
@@ -170,7 +221,6 @@ export default function App() {
   };
 
   const todayFormatted = formatDate(new Date());
-
   const appId = typeof window !== 'undefined' ? encodeURIComponent(window.location.hostname) : 'unknown-app';
 
   // ── Login Screen ──────────────────────────────────────────────────────────
@@ -202,27 +252,110 @@ export default function App() {
           <div className="zweeti-bill-box">
             <div className="zweeti-card">
               <h2 className="text-lg font-extrabold text-gray-800 mb-1">Welcome Back 👋</h2>
-              <p className="text-sm text-gray-500 mb-5">Enter your mobile number to continue.</p>
+              <p className="text-sm text-gray-500 mb-5">
+                {otpSent
+                  ? 'Enter the OTP sent to your phone.'
+                  : 'Enter your phone number to receive an OTP.'}
+              </p>
 
-              <input
-                id="mobile"
-                type="tel"
-                value={mobileNumber}
-                onChange={e => setMobileNumber(e.target.value)}
-                onKeyDown={handleMobileKeyDown}
-                placeholder="Enter Mobile Number"
-                maxLength={10}
-                style={{ width: '100%', padding: '12px', fontSize: '16px' }}
-                className="rounded-[5px] border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5722]/30 focus:border-[#ff5722] text-gray-800 font-medium placeholder:text-gray-400 transition-all"
-              />
+              {/* Phone input */}
+              <div className="mb-3">
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
+                  Phone Number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
+                  placeholder="+91XXXXXXXXXX"
+                  disabled={otpSent || sendingOtp}
+                  style={{ width: '100%', padding: '12px', fontSize: '16px' }}
+                  className="rounded-[5px] border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5722]/30 focus:border-[#ff5722] text-gray-800 font-medium placeholder:text-gray-400 transition-all disabled:opacity-60 disabled:bg-gray-50"
+                />
+              </div>
 
-              <button
-                onClick={handleLogin}
-                style={{ marginTop: '10px' }}
-                className="zweeti-btn-orange w-full text-base"
-              >
-                Continue
-              </button>
+              {/* Invisible reCAPTCHA container — no visible widget rendered */}
+              <div id="recaptcha" />
+
+              {/* Send OTP button */}
+              {!otpSent && (
+                <button
+                  onClick={sendOTP}
+                  disabled={sendingOtp}
+                  className="zweeti-btn-orange w-full text-base flex items-center justify-center gap-2 no-print mb-1"
+                >
+                  {sendingOtp ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending OTP…
+                    </>
+                  ) : (
+                    'Send OTP'
+                  )}
+                </button>
+              )}
+
+              {/* OTP input — shown after OTP is sent */}
+              {otpSent && (
+                <>
+                  <div className="mb-3">
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
+                      One-Time Password
+                    </label>
+                    <input
+                      id="otp"
+                      type="text"
+                      inputMode="numeric"
+                      value={otp}
+                      onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="Enter OTP"
+                      maxLength={6}
+                      disabled={verifyingOtp}
+                      style={{ width: '100%', padding: '12px', fontSize: '20px', letterSpacing: '0.3em', textAlign: 'center' }}
+                      className="rounded-[5px] border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5722]/30 focus:border-[#ff5722] text-gray-800 font-bold placeholder:text-gray-400 placeholder:tracking-normal transition-all disabled:opacity-60"
+                    />
+                  </div>
+
+                  {/* Verify button */}
+                  <button
+                    onClick={verifyOTP}
+                    disabled={verifyingOtp}
+                    className="zweeti-btn-orange w-full text-base flex items-center justify-center gap-2 no-print"
+                    style={{ marginBottom: '8px' }}
+                  >
+                    {verifyingOtp ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Verifying…
+                      </>
+                    ) : (
+                      'Verify'
+                    )}
+                  </button>
+
+                  {/* Resend option */}
+                  <button
+                    onClick={() => {
+                      setOtpSent(false);
+                      setOtp('123456');
+                      setLoginError('');
+                      confirmationResultRef.current = null;
+                      recaptchaVerifierRef.current = null;
+                    }}
+                    className="w-full text-sm text-gray-500 hover:text-[#ff5722] transition-colors font-medium py-1 no-print"
+                  >
+                    ← Change phone number / Resend OTP
+                  </button>
+                </>
+              )}
+
+              {/* Error message */}
+              {loginError && (
+                <div className="mt-3 px-3 py-2 rounded-[5px] bg-red-50 border border-red-200 text-red-600 text-sm font-medium">
+                  {loginError}
+                </div>
+              )}
             </div>
           </div>
         </main>
@@ -353,87 +486,59 @@ export default function App() {
 
           {/* Empty state */}
           {billItems.length === 0 && (
-            <div className="zweeti-card p-8 text-center print:hidden">
-              <div className="text-5xl mb-3">🍔</div>
-              <p className="text-gray-500 font-medium text-sm">No items added yet.</p>
-              <p className="text-gray-400 text-xs mt-1">Select an item and click "Add Item" to start billing.</p>
+            <div className="zweeti-card text-center py-8">
+              <p className="text-gray-400 text-sm">No items added yet. Use the form above to add items.</p>
             </div>
           )}
 
           {/* Daily Sales Report */}
-          <div className="no-print zweeti-card border-l-4 border-[#ff5722]">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart2 className="w-5 h-5 text-[#ff5722]" />
-              <h3 className="font-extrabold text-gray-800 text-base tracking-tight">
-                📊 Daily Sales Report
-              </h3>
+          <div className="zweeti-card no-print">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <BarChart2 className="w-4 h-4 text-[#ff5722]" />
+                <h3 className="text-sm font-extrabold text-gray-700 uppercase tracking-wide">
+                  Today's Sales
+                </h3>
+              </div>
+              <button
+                onClick={clearDailyTotal}
+                title="Reset today's total"
+                className="text-gray-400 hover:text-red-400 transition-colors"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
             </div>
-            <div className="space-y-1.5 mb-4">
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-700">Date:</span>{' '}
-                <span className="font-medium">{todayFormatted}</span>
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-700">Today's Total:</span>{' '}
-                <span className="font-extrabold text-[#ff5722] text-base">
-                  ₹ {dailyTotal.toFixed(2)}
-                </span>
-              </p>
-            </div>
-            <button
-              onClick={clearDailyTotal}
-              className="flex items-center gap-2 px-4 py-2 rounded-[5px] bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm transition-colors border border-gray-200"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              🔄 Clear Today
-            </button>
+            <p className="text-xs text-gray-400 mb-1">{todayFormatted}</p>
+            <p className="text-2xl font-extrabold text-[#ff5722]">
+              ₹{dailyTotal.toFixed(2)}
+            </p>
           </div>
 
           {/* Date Wise Sales Report */}
-          <div className="no-print date-report">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <CalendarSearch className="w-5 h-5 text-[#ff5722]" />
-              <h3>
-                📅 Date Wise Sales Report
+          <div className="zweeti-card no-print date-report-section">
+            <div className="flex items-center gap-2 mb-3">
+              <CalendarSearch className="w-4 h-4 text-[#2196f3]" />
+              <h3 className="text-sm font-extrabold text-gray-700 uppercase tracking-wide">
+                Date Wise Sales Report
               </h3>
             </div>
-            <div className="mb-3">
-              <input
-                type="date"
-                id="selectDate"
-                value={selectedDate}
-                onChange={handleDateWiseChange}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-700">Date:</span>{' '}
-                <span id="selectedDate" className="font-medium">
-                  {dateWiseFormatted || <span className="text-gray-400 italic">—</span>}
-                </span>
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-700">Total Sale:</span>{' '}
-                <span className="font-semibold text-gray-700">₹</span>{' '}
-                <span
-                  id="dateTotal"
-                  className="font-extrabold text-[#ff5722] text-base"
-                >
-                  {selectedDate ? dateWiseTotal.toFixed(2) : '0'}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {/* Logout Button */}
-          <div className="no-print">
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 font-semibold text-sm transition-colors border border-gray-200"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={handleDateWiseChange}
+              className="w-full px-3 py-2 rounded-[5px] border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#2196f3]/30 focus:border-[#2196f3] text-gray-700 text-sm mb-3 transition-all"
+            />
+            {selectedDate && (
+              <div className="bg-blue-50 rounded-[5px] px-4 py-3 border border-blue-100">
+                <p className="text-xs text-gray-500 mb-0.5">{dateWiseFormatted}</p>
+                <p className="text-xl font-extrabold text-[#2196f3]">
+                  ₹{dateWiseTotal.toFixed(2)}
+                </p>
+                {dateWiseTotal === 0 && (
+                  <p className="text-xs text-gray-400 mt-1">No sales recorded for this date.</p>
+                )}
+              </div>
+            )}
           </div>
 
         </div>
@@ -441,19 +546,27 @@ export default function App() {
 
       {/* Footer */}
       <footer className="py-4 px-4 text-center print:hidden">
-        <p className="text-xs text-gray-400 flex items-center justify-center gap-1">
-          © {new Date().getFullYear()} Zweeti Fast Food. Built with{' '}
-          <Heart className="w-3 h-3 fill-current" style={{ color: '#ff5722' }} />{' '}
-          using{' '}
-          <a
-            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="zweeti-orange-text hover:underline font-medium"
+        <div className="max-w-[460px] mx-auto flex items-center justify-between">
+          <button
+            onClick={handleLogout}
+            className="text-xs text-gray-400 hover:text-red-400 transition-colors font-medium"
           >
-            caffeine.ai
-          </a>
-        </p>
+            Logout
+          </button>
+          <p className="text-xs text-gray-400 flex items-center gap-1">
+            Built with{' '}
+            <Heart className="w-3 h-3 fill-current" style={{ color: '#ff5722' }} />{' '}
+            using{' '}
+            <a
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="zweeti-orange-text hover:underline font-medium"
+            >
+              caffeine.ai
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );

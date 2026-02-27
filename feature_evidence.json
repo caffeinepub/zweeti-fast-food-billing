@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-app-tsx-update-the-login-screen-logic-so-that-on-component-mount-equivalent-to-window-onload-if-zweetiuser-exists-in-localstorage-automatically-skip-the-login-screen-and-show-the-main-billing-ui-directly-without-requiring-the-user-to-re-enter-their-mobile-number",
-      "featureTitle": "In App.tsx, update the login screen logic so that on component mount (equivalent to window.onload), if 'zweetiUser' exists in localStorage, automatically skip the login screen and show the main billing UI directly — without requiring the user to re-enter their mobile number.",
+      "featureId": "feature-in-frontend-src-firebase-ts-update-the-firebase-app-configuration-to-add-localhost-and-127-0-0-1-as-authorized-domains-for-firebase-authentication-ensure-the-authdomain-field-in-the-firebaseconfig-object-continues-to-use-the-existing-real-project-credentials-and-that-the-recaptchaverifier-initialization-in-app-tsx-does-not-block-or-error-when-the-app-is-served-from-localhost-or-127-0-0-1-if-the-firebase-stub-mock-implementation-is-being-used-instead-of-the-real-firebase-npm-package-ensure-the-mock-recaptchaverifier-and-signinwithphonenumber-behave-permissively-when-called-from-localhost-so-that-otp-flow-can-be-tested-locally-without-firebase-rejecting-the-domain",
+      "featureTitle": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/firebase.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,43 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-36"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-in-app-tsx-add-a-logout-function-that-removes-the-zweetiuser-key-from-localstorage-and-reloads-the-page-location-reload-effectively-returning-the-user-to-the-login-screen-add-a-logout-button-visible-in-the-main-billing-ui-hidden-during-print-that-calls-this-logout-function-when-clicked",
-      "featureTitle": "In App.tsx, add a logout function that removes the 'zweetiUser' key from localStorage and reloads the page (location.reload()), effectively returning the user to the login screen. Add a 'Logout' button visible in the main billing UI (hidden during print) that calls this logout function when clicked.",
-      "files": [
-        "frontend/src/App.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-37"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-in-app-tsx-update-the-login-validation-so-that-when-the-user-enters-a-mobile-number-and-clicks-continue-if-the-input-is-not-exactly-10-digits-an-alert-is-shown-with-the-message-enter-valid-10-digit-mobile-number-matching-the-reference-script-behavior-and-the-login-is-aborted-if-valid-store-the-mobile-number-in-localstorage-under-the-key-zweetiuser-and-show-the-billing-screen",
-      "featureTitle": "In App.tsx, update the login validation so that when the user enters a mobile number and clicks 'Continue', if the input is not exactly 10 digits, an alert is shown with the message 'Enter valid 10 digit mobile number' (matching the reference script behavior), and the login is aborted. If valid, store the mobile number in localStorage under the key 'zweetiUser' and show the billing screen.",
-      "files": [
-        "frontend/src/App.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-38"
+        "REQ-50"
       ],
       "confidence": "high"
     }

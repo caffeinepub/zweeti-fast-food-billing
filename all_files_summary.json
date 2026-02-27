@@ -1,16 +1,17 @@
 {
   "backend/main.mo": "Minimal Motoko backend actor with no methods or state defined.",
-  "feature_evidence.json": "Feature evidence report mapping three login/logout-related feature requirements (REQ-36, REQ-37, REQ-38) to App.tsx, covering auto-login on mount, logout button, and 10-digit mobile validation.",
+  "feature_evidence.json": "Feature evidence report linking the Firebase stub/mock localhost authorization feature to its implementation file and test ID REQ-50.",
   "frontend-file-summaries.txt": "JSON document containing one-line summaries of each frontend source file for the Zweeti Fast Food Billing app.",
-  "frontend/index.css": "Tailwind CSS entry file defining OKLCH-based CSS custom properties for light and dark themes including colors, borders, and sidebar tokens.",
+  "frontend/index.css": "Tailwind CSS entry file that defines OKLCH-based CSS custom properties for light and dark theme color tokens used throughout the app.",
   "frontend/index.html": "HTML entry point for the Zweeti Fast Food Billing app, loading Nunito fonts from Google Fonts and mounting the React app at #root.",
-  "frontend/src/App.tsx": "Main React app component implementing localStorage-based login (auto-login on mount if 'zweetiUser' exists, 10-digit mobile validation, logout with page reload) and the billing UI with invoice generation, daily totals, GST calculation, and date-wise sales report.",
-  "frontend/src/components/BillingForm.tsx": "Billing form component with a 13-item Zweeti menu dropdown, quantity input, and an Add Item button that validates input and calls the onAddItem callback.",
-  "frontend/src/components/BillSummary.tsx": "Bill summary component rendering a two-column item/price table with a tfoot total row, GST toggle, and subtotal/GST/grand-total breakdown that recalculates via useEffect when items or GST setting change.",
-  "frontend/src/hooks/useActor.ts": "Custom React hook that creates and caches an ICP backend actor (anonymous or authenticated) using React Query, invalidating dependent queries whenever the actor or identity changes.",
-  "frontend/src/hooks/useInternetIdentity.ts": "Provides a React context and hook for Internet Identity authentication on the ICP platform, managing login state, identity persistence, and AuthClient lifecycle.",
-  "frontend/src/index.css": "Global stylesheet using Tailwind CSS with ZWEETI Pro brand tokens (orange, green, blue), OKLCH CSS variables for theming, and custom component classes for cards, buttons, tables, and layout.",
-  "frontend/src/main.tsx": "React app entry point that mounts the root component wrapped with QueryClientProvider and InternetIdentityProvider.",
-  "frontend/tailwind.config.js": "Tailwind CSS configuration extending the default theme with ZWEETI brand colors, Nunito font, OKLCH-based semantic color tokens, and plugins for animation, typography, and container queries.",
-  "project_state.json": "Tracks the project state and version history for the Zweeti Fast Food Billing app, documenting architectural decisions, existing features, and known issues."
+  "frontend/src/App.tsx": "Main React app component implementing Firebase OTP phone authentication (pre-filled with test credentials), billing item management, GST toggle, daily sales tracking, and date-wise sales report.",
+  "frontend/src/components/BillingForm.tsx": "Billing form component with a 13-item Zweeti menu selector, quantity input, and an Add Item button that calls the parent's onAddItem callback.",
+  "frontend/src/components/BillSummary.tsx": "Bill summary component rendering a two-column item/price table with subtotal, GST breakdown, and a grand total tfoot row, plus per-item remove buttons.",
+  "frontend/src/firebase.ts": "Firebase Auth stub that mirrors the real SDK's RecaptchaVerifier, signInWithPhoneNumber, and ConfirmationResult API, permissively allowing all domains (including localhost and 127.0.0.1) without throwing unauthorized-domain errors.",
+  "frontend/src/hooks/useActor.ts": "React hook that creates and caches an ICP backend actor (authenticated or anonymous) using React Query, and invalidates dependent queries whenever the actor changes.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides an InternetIdentityProvider and useInternetIdentity hook for managing Internet Identity authentication via AuthClient, exposing identity, login/clear functions, and login status.",
+  "frontend/src/index.css": "Global stylesheet defining Tailwind base/components/utilities plus custom ZWEETI Pro brand CSS variables and component classes (buttons, cards, table styles, header) using an orange/green/blue color scheme.",
+  "frontend/src/main.tsx": "Application entry point that mounts the React app with QueryClientProvider and InternetIdentityProvider wrapping the root App component.",
+  "frontend/tailwind.config.js": "Tailwind CSS configuration extending the default theme with ZWEETI brand colors, Nunito font, OKLCH-based semantic color tokens, custom border radii, and plugins for animation, typography, and container queries.",
+  "project_state.json": "Project state snapshot (version 63) documenting the Zweeti Fast Food Billing app's architecture, existing features, known issues, and design decisions including Firebase OTP auth, GST toggle, and print-to-PDF functionality."
 }

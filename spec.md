@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add auto-login from localStorage, a logout button, and improved mobile number validation to the Zweeti Pro login screen.
+**Goal:** Allow the Firebase OTP authentication flow to work when the app is served from localhost or 127.0.0.1, without breaking existing functionality.
 
 **Planned changes:**
-- On component mount, check if `zweetiUser` exists in localStorage; if so, skip the login screen and show the billing UI directly (using a `useEffect` hook).
-- Add a logout function that removes `zweetiUser` from localStorage and reloads the page; show a "Logout" button in the billing UI that is hidden during print.
-- Update login validation so that if the entered mobile number is not exactly 10 digits, an alert shows `'Enter valid 10 digit mobile number'` and login is aborted; if valid, store the number in localStorage under `zweetiUser` and show the billing screen.
+- Update `frontend/src/firebase.ts` so that the Firebase mock/stub treats `localhost` and `127.0.0.1` as authorized domains, preventing `auth/unauthorized-domain` errors during local development.
+- Ensure the mock `RecaptchaVerifier` and `signInWithPhoneNumber` behave permissively when called from localhost so the OTP flow can be tested locally.
+- Preserve all real Firebase credentials and existing exports (`auth`, `RecaptchaVerifier`, `signInWithPhoneNumber`) in `firebase.ts` unchanged.
 
-**User-visible outcome:** Users who have previously logged in are taken directly to the billing UI on page load. Users can log out via a button that returns them to the login screen. The login form enforces a 10-digit mobile number with an alert for invalid input.
+**User-visible outcome:** The app loads and displays the OTP login screen without errors when accessed via `http://localhost` or `http://127.0.0.1`, and the Send OTP button works without throwing unauthorized-domain errors. Existing auto-login via localStorage continues to work as before.

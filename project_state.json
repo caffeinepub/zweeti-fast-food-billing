@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 47,
-  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated CSS reference design with: gradient body background (linear-gradient 135deg #ff5722 to #ff9800), app container max-width 420px with #f5f5f5 background, orange #ff5722 header bar, white cards with border-radius 12px and box-shadow, table headers with #ffe0d6 background, buttons full-width with border-radius 8px (Print: #4caf50, PDF: #2196f3, Clear: #9e9e9e). User has also requested Invoice Number and Date fields. Save as PDF button calls window.print(). GST toggle checkbox (checked by default) toggles GST (5%) on/off. A login screen (ZWEETI Pro Login) has been requested with mobile number input, Continue button, auto-login from localStorage, and a logout function that clears localStorage and reloads the page.",
+  "projectStateVersion": 63,
+  "summary": "Zweeti Fast Food Billing app — a mobile-friendly fast food billing web app. The user has provided an updated CSS reference design with: gradient body background (linear-gradient 135deg #ff5722 to #ff9800), app container max-width 420px with #f5f5f5 background, orange #ff5722 header bar, white cards with border-radius 12px and box-shadow, table headers with #ffe0d6 background, buttons full-width with border-radius 8px (Print: #4caf50, PDF: #2196f3, Clear: #9e9e9e). User has also requested Invoice Number and Date fields. Save as PDF button calls window.print(). GST toggle checkbox (checked by default) toggles GST (5%) on/off. A login screen has been updated to use Firebase OTP phone authentication: phone input (+91XXXXXXXXXX), a recaptcha div, a Send OTP button, an OTP input, and a Verify button. Firebase Authentication integration is being added using Firebase JS SDK v9.23.0.",
   "architectural_notes": [
     "Single-page HTML app with inline CSS and vanilla JS",
     "Print bill hides buttons via @media print",
@@ -10,7 +10,9 @@
     "Date Wise Sales Report uses localStorage key format 'dailyTotal_YYYY-M-D' (non-zero-padded month/day) via getKeyFromDate()",
     "GST is togglable via a checkbox (id='gstToggle'); when unchecked, GST is 0 and Grand Total equals Subtotal",
     "Body uses gradient background (135deg #ff5722 to #ff9800); app container is max-width 420px with #f5f5f5 background; header bar is #ff5722; cards are white with border-radius 12px and box-shadow",
-    "Login state persisted in localStorage key 'zweetiUser'; auto-login on page load if key exists; logout clears key and reloads"
+    "Login state persisted in localStorage key 'zweetiUser'; auto-login on page load if key exists; logout clears key and reloads",
+    "Firebase JS SDK v9.23.0 loaded via CDN (firebase-app.js and firebase-auth.js from gstatic.com) for authentication",
+    "Login screen uses Firebase phone OTP authentication: RecaptchaVerifier on 'recaptcha' div, sendOTP() calls signInWithPhoneNumber, verifyOTP() confirms OTP code"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -302,6 +304,94 @@
         "REQ-38"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-ensure-the-logout-button-in-the-main-billing-ui-uses-the-css-class-clear-matching-the-reference-html-button-onclick-logout-class-clear-logout-button-the-button-must-call-the-existing-logout-function-which-removes-zweetiuser-from-localstorage-and-reloads-the-page-be-full-width-with-the-grey-background-9e9e9e-and-white-text-consistent-with-other-clear-class-buttons-and-remain-hidden-during-print-using-the-existing-no-print-css-class",
+      "title": "In App.tsx, ensure the Logout button in the main billing UI uses the CSS class 'clear' (matching the reference HTML: `<button onclick=\"logout()\" class=\"clear\">Logout</button>`). The button must call the existing logout function (which removes 'zweetiUser' from localStorage and reloads the page), be full-width with the grey background (#9e9e9e) and white text consistent with other 'clear'-class buttons, and remain hidden during print using the existing no-print CSS class.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-integrate-firebase-authentication-using-the-firebase-js-sdk-v9-23-0-load-the-firebase-modules-firebase-app-js-and-firebase-auth-js-via-the-cdn-urls-provided-https-www-gstatic-com-firebasejs-9-23-0-firebase-app-js-and-https-www-gstatic-com-firebasejs-9-23-0-firebase-auth-js-since-this-is-a-vite-react-project-import-the-compat-or-modular-sdk-via-npm-package-firebase-9-instead-of-raw-cdn-script-tags-which-are-not-compatible-with-the-module-bundler-install-the-firebase-npm-package-at-version-9-x-and-initialize-a-firebase-app-instance-in-a-new-file-frontend-src-firebase-ts-using-initializeapp-with-a-placeholder-firebaseconfig-object-apikey-authdomain-projectid-appid-fields-leave-values-as-empty-strings-or-todo-placeholders-so-the-user-can-fill-in-their-own-firebase-project-credentials-export-the-initialized-auth-instance-using-getauth-from-firebase-auth",
+      "title": "In App.tsx, integrate Firebase Authentication using the Firebase JS SDK v9.23.0. Load the Firebase modules (firebase-app.js and firebase-auth.js) via the CDN URLs provided: https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js and https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js. Since this is a Vite/React project, import the compat or modular SDK via npm package 'firebase@9' instead of raw CDN script tags (which are not compatible with the module bundler). Install the 'firebase' npm package at version 9.x and initialize a Firebase app instance in a new file frontend/src/firebase.ts using initializeApp with a placeholder firebaseConfig object (apiKey, authDomain, projectId, appId fields — leave values as empty strings or TODO placeholders so the user can fill in their own Firebase project credentials). Export the initialized auth instance using getAuth from 'firebase/auth'.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-existing-localstorage-based-login-flow-to-also-support-firebase-phone-authentication-using-the-firebase-auth-sdk-v9-imported-from-frontend-src-firebase-ts-the-existing-10-digit-mobile-number-validation-and-localstorage-zweetiuser-flow-must-remain-intact-as-a-fallback-optionally-wire-up-firebase-recaptchaverifier-and-signinwithphonenumber-so-that-when-a-valid-10-digit-number-is-entered-a-firebase-otp-flow-can-be-triggered-in-the-future-for-now-ensure-the-firebase-auth-instance-is-imported-and-available-in-app-tsx-without-breaking-the-current-login-logout-auto-login-behavior",
+      "title": "In App.tsx, update the existing localStorage-based login flow to also support Firebase phone authentication using the Firebase Auth SDK v9 (imported from frontend/src/firebase.ts). The existing 10-digit mobile number validation and localStorage ('zweetiUser') flow must remain intact as a fallback. Optionally wire up Firebase RecaptchaVerifier and signInWithPhoneNumber so that when a valid 10-digit number is entered, a Firebase OTP flow can be triggered in the future. For now, ensure the Firebase auth instance is imported and available in App.tsx without breaking the current login/logout/auto-login behavior.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-frontend-src-firebase-ts-replace-the-placeholder-firebaseconfig-values-with-the-real-credentials-provided-by-the-user-apikey-xxxx-authdomain-xxxx-firebaseapp-com-projectid-xxxx-appid-xxxx-keep-all-existing-exports-auth-instance-via-getauth-and-the-overall-file-structure-unchanged",
+      "title": "In frontend/src/firebase.ts, replace the placeholder firebaseConfig values with the real credentials provided by the user: apiKey: \"XXXX\", authDomain: \"XXXX.firebaseapp.com\", projectId: \"XXXX\", appId: \"XXXX\". Keep all existing exports (auth instance via getAuth) and the overall file structure unchanged.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-replace-the-existing-simple-mobile-number-login-screen-with-a-firebase-otp-phone-authentication-flow-the-login-screen-must-contain-1-a-phone-number-input-with-placeholder-91xxxxxxxxxx-2-a-div-with-id-recaptcha-to-mount-the-firebase-recaptchaverifier-3-a-send-otp-button-that-calls-a-sendotp-function-4-an-otp-input-field-with-placeholder-enter-otp-and-5-a-verify-button-that-calls-a-verifyotp-function-the-sendotp-function-must-initialize-a-firebase-recaptchaverifier-on-the-recaptcha-div-call-signinwithphonenumber-from-the-firebase-auth-sdk-imported-from-frontend-src-firebase-ts-with-the-phone-number-and-store-the-confirmation-result-the-verifyotp-function-must-call-confirmationresult-confirm-otp-and-on-success-store-the-user-identifier-in-localstorage-under-zweetiuser-and-show-the-main-billing-ui-the-existing-localstorage-auto-login-on-mount-check-for-zweetiuser-and-the-logout-function-remove-zweetiuser-location-reload-must-remain-intact",
+      "title": "In App.tsx, replace the existing simple mobile-number login screen with a Firebase OTP phone authentication flow. The login screen must contain: (1) a phone number input with placeholder '+91XXXXXXXXXX'; (2) a div with id='recaptcha' to mount the Firebase RecaptchaVerifier; (3) a 'Send OTP' button that calls a sendOTP() function; (4) an OTP input field with placeholder 'Enter OTP'; and (5) a 'Verify' button that calls a verifyOTP() function. The sendOTP() function must initialize a Firebase RecaptchaVerifier on the 'recaptcha' div, call signInWithPhoneNumber from the Firebase Auth SDK (imported from frontend/src/firebase.ts) with the phone number, and store the confirmation result. The verifyOTP() function must call confirmationResult.confirm(otp) and on success store the user identifier in localStorage under 'zweetiUser' and show the main billing UI. The existing localStorage auto-login on mount (check for 'zweetiUser') and the logout function (remove 'zweetiUser' + location.reload()) must remain intact.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-frontend-src-firebase-ts-ensure-the-firebase-auth-sdk-is-fully-initialized-using-the-real-credentials-already-stored-in-the-file-and-that-signinwithphonenumber-recaptchaverifier-and-phoneauthprovider-are-exported-or-accessible-for-use-in-app-tsx-the-existing-auth-instance-export-via-getauth-must-remain-no-placeholder-credentials-should-remain-use-the-real-values-already-present-in-the-file",
+      "title": "In frontend/src/firebase.ts, ensure the Firebase Auth SDK is fully initialized using the real credentials already stored in the file, and that signInWithPhoneNumber, RecaptchaVerifier, and PhoneAuthProvider are exported or accessible for use in App.tsx. The existing auth instance export via getAuth must remain. No placeholder credentials should remain — use the real values already present in the file.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-sendotp-function-so-that-it-initializes-a-firebase-recaptchaverifier-with-size-invisible-on-the-div-with-id-recaptcha-then-calls-signinwithphonenumber-auth-phone-recaptchaverifier-using-the-auth-instance-and-signinwithphonenumber-imported-from-frontend-src-firebase-ts-the-returned-confirmation-result-must-be-stored-in-a-ref-or-module-level-variable-so-verifyotp-can-access-it-on-success-show-the-otp-input-section-on-error-display-an-inline-error-message",
+      "title": "In App.tsx, update the sendOTP() function so that it initializes a Firebase RecaptchaVerifier with size 'invisible' on the div with id='recaptcha', then calls signInWithPhoneNumber(auth, phone, recaptchaVerifier) using the auth instance and signInWithPhoneNumber imported from frontend/src/firebase.ts. The returned confirmation result must be stored in a ref or module-level variable so verifyOTP() can access it. On success, show the OTP input section. On error, display an inline error message.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-update-the-verifyotp-function-so-that-it-calls-confirmationresult-confirm-otp-using-the-stored-confirmation-result-and-the-otp-value-entered-by-the-user-on-success-store-the-user-s-phone-number-or-uid-in-localstorage-under-the-key-zweetiuser-and-transition-to-the-main-billing-ui-on-failure-display-an-inline-error-message-such-as-invalid-otp-please-try-again",
+      "title": "In App.tsx, update the verifyOTP() function so that it calls confirmationResult.confirm(otp) using the stored confirmation result and the OTP value entered by the user. On success, store the user's phone number (or uid) in localStorage under the key 'zweetiUser' and transition to the main billing UI. On failure, display an inline error message such as 'Invalid OTP. Please try again.'",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-frontend-src-firebase-ts-update-the-stub-so-that-recaptchaverifier-is-exported-as-a-proper-class-or-re-exported-from-the-firebase-auth-module-if-the-firebase-npm-package-is-available-accepting-the-constructor-signature-new-recaptchaverifier-containerid-options-auth-also-ensure-signinwithphonenumber-is-exported-with-the-signature-signinwithphonenumber-auth-phonenumber-recaptchaverifier-promise-confirmationresult-these-exports-must-be-compatible-with-the-usage-in-app-tsx-without-requiring-cdn-script-tags",
+      "title": "In frontend/src/firebase.ts, update the stub so that RecaptchaVerifier is exported as a proper class (or re-exported from the firebase/auth module if the firebase npm package is available) accepting the constructor signature new RecaptchaVerifier(containerId, options, auth). Also ensure signInWithPhoneNumber is exported with the signature signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier): Promise<ConfirmationResult>. These exports must be compatible with the usage in App.tsx without requiring CDN script tags.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-app-tsx-pre-populate-the-phone-number-input-field-on-the-firebase-otp-login-screen-with-the-value-911234567890-and-pre-populate-the-otp-input-field-with-the-value-123456-as-default-values-via-the-react-state-initializers-or-defaultvalue-props-this-allows-the-test-credentials-to-appear-ready-to-use-when-the-login-screen-loads",
+      "title": "In App.tsx, pre-populate the phone number input field on the Firebase OTP login screen with the value '+911234567890' and pre-populate the OTP input field with the value '123456' as default values (via the React state initializers or defaultValue props). This allows the test credentials to appear ready-to-use when the login screen loads.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-frontend-src-firebase-ts-update-the-firebase-app-configuration-to-add-localhost-and-127-0-0-1-as-authorized-domains-for-firebase-authentication-ensure-the-authdomain-field-in-the-firebaseconfig-object-continues-to-use-the-existing-real-project-credentials-and-that-the-recaptchaverifier-initialization-in-app-tsx-does-not-block-or-error-when-the-app-is-served-from-localhost-or-127-0-0-1-if-the-firebase-stub-mock-implementation-is-being-used-instead-of-the-real-firebase-npm-package-ensure-the-mock-recaptchaverifier-and-signinwithphonenumber-behave-permissively-when-called-from-localhost-so-that-otp-flow-can-be-tested-locally-without-firebase-rejecting-the-domain",
+      "title": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -397,6 +487,26 @@
       "id": "AR-20",
       "summary": "Implement login/logout logic: login() validates 10-digit mobile, stores in localStorage ('zweetiUser'), calls showBilling(). showBilling() hides loginScreen and shows billingScreen. window.onload auto-logs in if 'zweetiUser' exists in localStorage. logout() removes 'zweetiUser' from localStorage and calls location.reload().",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Integrate Firebase Authentication using Firebase JS SDK v9.23.0 (firebase-app.js and firebase-auth.js loaded via CDN scripts)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Update login screen to use Firebase OTP phone auth: phone input (placeholder '+91XXXXXXXXXX'), recaptcha div, Send OTP button (calls sendOTP()), OTP input, and Verify button (calls verifyOTP())",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "In App.tsx, update the phone number input placeholder on the Firebase OTP login screen from its current value to '+91XXXXXXXXXX', matching the format the user provided.",
+      "reqIds": [
+        "REQ-48"
+      ],
       "status": "pending"
     }
   ],

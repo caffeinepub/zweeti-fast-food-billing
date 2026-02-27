@@ -171,6 +171,28 @@
     background-color: #1976d2;
   }
 
+  /* Clear / Logout button - grey style */
+  button.clear {
+    background-color: #9e9e9e;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+    transition: background-color 0.15s, transform 0.1s;
+  }
+
+  button.clear:hover {
+    background-color: #757575;
+  }
+
+  button.clear:active {
+    transform: scale(0.98);
+  }
+
   /* Date Wise Sales Report section */
   .date-report {
     margin-top: 20px;

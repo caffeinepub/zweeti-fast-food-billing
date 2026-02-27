@@ -1,75 +1,42 @@
 {
   "kind": "build_request",
-  "title": "Implement auto-login from localStorage and logout function for the login screen",
+  "title": "Add localhost/127.0.0.1 to Firebase authorized domains",
   "projectName": "Zweeti Pro",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-36",
-      "text": "In App.tsx, update the login screen logic so that on component mount (equivalent to window.onload), if 'zweetiUser' exists in localStorage, automatically skip the login screen and show the main billing UI directly — without requiring the user to re-enter their mobile number.",
+      "id": "REQ-50",
+      "text": "In frontend/src/firebase.ts, update the Firebase app configuration to add 'localhost' and '127.0.0.1' as authorized domains for Firebase Authentication. Ensure the authDomain field in the firebaseConfig object continues to use the existing real project credentials, and that the RecaptchaVerifier initialization in App.tsx does not block or error when the app is served from localhost or 127.0.0.1. If the Firebase stub (mock) implementation is being used instead of the real firebase npm package, ensure the mock RecaptchaVerifier and signInWithPhoneNumber behave permissively when called from localhost so that OTP flow can be tested locally without Firebase rejecting the domain.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-latest"
         ],
         "quotes": [
-          "// Auto login if already signed in\nwindow.onload = function(){\n    if(localStorage.getItem(\"zweetiUser\")){\n        showBilling();\n    }\n};"
+          "localhost",
+          "127.0.0.1"
         ]
       },
       "acceptanceCriteria": [
-        "On page load, if localStorage contains the key 'zweetiUser', the login screen is not shown and the billing UI is displayed immediately.",
-        "If localStorage does not contain 'zweetiUser', the login screen is shown as normal.",
-        "The auto-login check runs once on component mount using a useEffect hook."
-      ]
-    },
-    {
-      "id": "REQ-37",
-      "text": "In App.tsx, add a logout function that removes the 'zweetiUser' key from localStorage and reloads the page (location.reload()), effectively returning the user to the login screen. Add a 'Logout' button visible in the main billing UI (hidden during print) that calls this logout function when clicked.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "function logout(){\n    localStorage.removeItem(\"zweetiUser\");\n    location.reload();\n}"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A 'Logout' button is visible in the main billing UI and hidden during print (using the no-print CSS class).",
-        "Clicking 'Logout' removes the 'zweetiUser' key from localStorage.",
-        "After logout, the page reloads and the login screen is displayed.",
-        "The logout button is styled consistently with the existing action buttons (full-width, border-radius 8px, appropriate background color)."
-      ]
-    },
-    {
-      "id": "REQ-38",
-      "text": "In App.tsx, update the login validation so that when the user enters a mobile number and clicks 'Continue', if the input is not exactly 10 digits, an alert is shown with the message 'Enter valid 10 digit mobile number' (matching the reference script behavior), and the login is aborted. If valid, store the mobile number in localStorage under the key 'zweetiUser' and show the billing screen.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "if(mobile.length !== 10){\n        alert(\"Enter valid 10 digit mobile number\");\n        return;\n    }\n\n    localStorage.setItem(\"zweetiUser\", mobile);\n    showBilling();"
-        ]
-      },
-      "acceptanceCriteria": [
-        "If the entered mobile number is not exactly 10 digits, an alert displays 'Enter valid 10 digit mobile number' and the billing screen is not shown.",
-        "If the entered mobile number is exactly 10 digits, it is stored in localStorage under the key 'zweetiUser'.",
-        "After successful login, the login screen is hidden and the billing UI is shown.",
-        "The existing inline error message approach in the login screen (if any) is reconciled with or replaced by this alert-based validation to match the reference script."
+        "The app loads and the Firebase OTP login screen is displayed when served from http://localhost or http://127.0.0.1 without console errors related to unauthorized domains.",
+        "The Send OTP button on the login screen does not throw a Firebase 'auth/unauthorized-domain' error when accessed via localhost or 127.0.0.1.",
+        "The existing auto-login (zweetiUser in localStorage) still works correctly when the app is served from localhost or 127.0.0.1.",
+        "The real Firebase credentials already stored in firebase.ts remain unchanged.",
+        "All existing exports from firebase.ts (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and compatible with their usage in App.tsx."
       ]
     }
   ],
   "constraints": [
+    "Do not change or remove the real Firebase credentials already stored in frontend/src/firebase.ts.",
     "Do not modify any files under frontend/src/hooks/ or frontend/src/main.tsx.",
-    "The localStorage key for storing the logged-in user must be exactly 'zweetiUser'.",
-    "All login/logout logic must be implemented in App.tsx as React state and useEffect patterns — no vanilla JS window.onload or direct DOM manipulation."
+    "Do not break the existing localStorage-based auto-login (zweetiUser) flow.",
+    "Do not alter the existing billing, GST toggle, daily sales report, or date-wise sales report functionality."
   ],
   "nonGoals": [
-    "Backend authentication or server-side session management.",
-    "Internet Identity or any other authentication provider beyond the mobile number gate.",
-    "Any changes to the billing form, bill summary, daily sales report, or date-wise report features."
+    "Changing the Firebase project or creating a new Firebase app instance.",
+    "Adding new billing features or modifying the billing UI.",
+    "Modifying backend/main.mo.",
+    "Changing the visual theme or layout of the app."
   ],
   "imageRequirements": {
     "required": [],
