@@ -1,9 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Update the Firebase `authDomain` configuration value to `yourdomain.com` in the frontend Firebase setup file.
+**Goal:** Pre-populate the Firebase OTP login screen with test credentials so they are ready to use on load.
 
 **Planned changes:**
-- In `frontend/src/firebase.ts`, update the `authDomain` field in the `firebaseConfig` object to `'yourdomain.com'`
+- Set the phone number input field's initial React state value to `+911234567890`
+- Set the OTP input field's initial React state value to `123456`
 
-**User-visible outcome:** The Firebase configuration uses the updated `authDomain` value while all other configuration fields and exports remain unchanged.
+**User-visible outcome:** When the login screen loads, both the phone number and OTP fields are already filled with test credentials, allowing immediate use of the Send OTP and Verify buttons without any manual input.

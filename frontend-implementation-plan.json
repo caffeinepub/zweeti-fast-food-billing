@@ -1,22 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update Firebase authDomain to use yourdomain.com",
+  "title": "Pre-populate test credentials on Firebase OTP login screen",
   "requirements": [
     {
-      "id": "REQ-51",
-      "summary": "Update authDomain in firebaseConfig to 'yourdomain.com' while preserving all other configuration values and exports",
+      "id": "REQ-52",
+      "summary": "Pre-populate phone number and OTP input fields with test credentials using React state initializers",
       "acceptanceCriteria": [
-        "The authDomain field in firebaseConfig in frontend/src/firebase.ts is set to 'yourdomain.com'.",
-        "All other firebaseConfig values remain unchanged.",
-        "All existing exports (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and functional.",
-        "The app builds without errors after the change."
+        "When the login screen loads, the phone number input field displays '+911234567890' as its initial value.",
+        "When the login screen loads, the OTP input field displays '123456' as its initial value.",
+        "The pre-populated values are set via React state initializers (e.g. useState('+911234567890') and useState('123456')), not hardcoded as HTML attributes only.",
+        "The Send OTP and Verify buttons continue to function correctly using the pre-populated values.",
+        "All existing login/logout/auto-login behavior remains intact."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/firebase.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Preserve all other firebaseConfig fields (apiKey, projectId, storageBucket, messagingSenderId, appId, measurementId) and all existing exports (auth instance, RecaptchaVerifier, signInWithPhoneNumber) without modification."
+          "description": "Modify the React state initializers for the phone number and OTP input fields to pre-populate with test credentials. Change the useState hooks for phone number to initialize with '+911234567890' and OTP to initialize with '123456'. Ensure the existing Firebase OTP authentication flow, localStorage auto-login (zweetiUser check on mount), logout function, and all other billing/sales features remain unchanged."
         }
       ]
     }

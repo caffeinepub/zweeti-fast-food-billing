@@ -1,34 +1,30 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T08:53:41.208Z",
+  "generatedAt": "2026-02-27T08:56:34.592Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 1,
-    "implemented": 1,
+    "implemented": 0,
     "items": [
       {
-        "id": "REQ-51",
-        "summary": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
-        "status": "implemented",
+        "id": "REQ-52",
+        "summary": "In App.tsx, ensure the phone number input field on the Firebase OTP login screen is pre-populated with the value '+911234567890' and the OTP input field is pre-populated with the value '123456' as default values via React state initializers. These test credentials must appear ready-to-use when the login screen loads, without any user interaction.",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/firebase.ts"
+          "frontend/src/App.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/firebase.ts"
-        ]
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/firebase.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

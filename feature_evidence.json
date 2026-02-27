@@ -1,23 +1,4 @@
 {
   "kind": "feature_evidence_report",
-  "features": [
-    {
-      "featureId": "feature-in-frontend-src-firebase-ts-update-the-authdomain-field-in-the-firebaseconfig-object-to-yourdomain-com-keep-all-other-existing-firebaseconfig-values-apikey-projectid-appid-etc-and-all-existing-exports-auth-instance-via-getauth-recaptchaverifier-signinwithphonenumber-unchanged",
-      "featureTitle": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
-      "files": [
-        "frontend/src/firebase.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-51"
-      ],
-      "confidence": "high"
-    }
-  ]
+  "features": []
 }

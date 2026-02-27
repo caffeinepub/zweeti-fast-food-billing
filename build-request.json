@@ -1,38 +1,40 @@
 {
   "kind": "build_request",
-  "title": "Update Firebase authDomain to use yourdomain.com",
+  "title": "Pre-populate test credentials on Firebase OTP login screen",
   "projectName": "Zweeti Pro",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-51",
-      "text": "In frontend/src/firebase.ts, update the authDomain field in the firebaseConfig object to 'yourdomain.com'. Keep all other existing firebaseConfig values (apiKey, projectId, appId, etc.) and all existing exports (auth instance via getAuth, RecaptchaVerifier, signInWithPhoneNumber) unchanged.",
+      "id": "REQ-52",
+      "text": "In App.tsx, ensure the phone number input field on the Firebase OTP login screen is pre-populated with the value '+911234567890' and the OTP input field is pre-populated with the value '123456' as default values via React state initializers. These test credentials must appear ready-to-use when the login screen loads, without any user interaction.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "yourdomain.com"
+          "Mobile: +911234567890",
+          "OTP: 123456"
         ]
       },
       "acceptanceCriteria": [
-        "The authDomain field in firebaseConfig in frontend/src/firebase.ts is set to 'yourdomain.com'.",
-        "All other firebaseConfig values remain unchanged.",
-        "All existing exports (auth, RecaptchaVerifier, signInWithPhoneNumber) remain intact and functional.",
-        "The app builds without errors after the change."
+        "When the login screen loads, the phone number input field displays '+911234567890' as its initial value.",
+        "When the login screen loads, the OTP input field displays '123456' as its initial value.",
+        "The pre-populated values are set via React state initializers (e.g. useState('+911234567890') and useState('123456')), not hardcoded as HTML attributes only.",
+        "The Send OTP and Verify buttons continue to function correctly using the pre-populated values.",
+        "All existing login/logout/auto-login behavior remains intact."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any other firebaseConfig fields (apiKey, projectId, appId, etc.).",
-    "Do not alter the exported auth instance, RecaptchaVerifier, or signInWithPhoneNumber signatures.",
-    "Do not modify any immutable frontend paths."
+    "Do not change the Firebase OTP authentication flow logic.",
+    "Do not modify any files listed in frontend.immutablePaths.",
+    "The existing localStorage auto-login (zweetiUser check on mount) and logout function must remain intact."
   ],
   "nonGoals": [
-    "Changing any other Firebase configuration or authentication logic.",
-    "Modifying App.tsx or any other component files.",
-    "Adding new features or UI changes."
+    "Changing Firebase credentials or authDomain.",
+    "Modifying the billing UI or any feature outside the login screen.",
+    "Adding new authentication methods."
   ],
   "imageRequirements": {
     "required": [],
